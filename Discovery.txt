@@ -1,0 +1,9 @@
+Discoveries:
+
+Pointers:
+
+    ScreenGen myGame;
+    int o = 10;
+    myGame.testInt(&o); //Whatever it modifies here happens outside and vice-verse, because they are both the same reference
+    o = 20;
+    cout << *(myGame.i) << "\n"; //Value will be 20 as o was change outside

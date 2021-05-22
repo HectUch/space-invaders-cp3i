@@ -1,0 +1,31 @@
+sudo apt-get install freeglut3
+sudo apt-get install freeglut3-dev
+sudo apt-get install libsfml-dev
+
+Either use :
+make clean
+make
+./spaceInvaders
+
+or compile in sfml lib:
+g++ -c main.cpp
+g++ main.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+./sfml-app
+
+Creating a git repo in computer:( git is probably installed in your raspberry)
+open terminal
+go to your folder ( cd/Desktop/(so on and on)...
+type:
+git config --global user.email "Jouw email"
+git config --global user.name "Jouw Naam,Jongen"
+git init
+git remote add origin "https://github.com/HectUch/rts2_group6.git"
+git remote -v 
+git add .
+git commit -m "Jouw comment"
+git push origin master
+
+From here you should be done, check the repository. Geferliciteerd!
+
+
+
