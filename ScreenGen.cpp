@@ -136,14 +136,6 @@ void ScreenGen::drawGame(sf::RenderWindow &window,int score,int lives){
     int numberImage = 1;   
     
      
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
         
         scoreTextstring = "Score : " + to_string(score);
         scoreText.setString(scoreTextstring);
@@ -172,7 +164,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,int score,int lives){
         sf::sleep(delayTime);
         playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
         
-    }  
+      
 
     
 }
