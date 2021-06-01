@@ -5,10 +5,14 @@
 player::player(){
     
     this->lives = 3;
-    this->score = 3;
+    this->score = 3500;
     this->x = 400;//InitialPosition
     this->y = 550;//InitalPosition
    
+}
+
+void player::setPosition(float onlyX){
+    this->x = onlyX;
 }
 
 int player::getLives(void ){

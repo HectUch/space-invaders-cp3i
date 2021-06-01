@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string>
 #include "player.h"
+#include "bullet.h"
+#include "invader.h"
+#include <vector>
 #define SCREENGEN_H
 
 using namespace std;
@@ -10,27 +13,28 @@ using namespace std;
 class ScreenGen{
 public:    
     ScreenGen(sf::RenderWindow &);
-    void drawGame(sf::RenderWindow &,int,int );
-    void initSprites(sf::Sprite&,char);
-    sf::Texture getTexture();
-    void LoadText();
-    void initPlayer(player);
-    void initInvaders();
-    sf::IntRect catchTextureByType(char,int);
-
-    
-    
+    void splashScreen();
+    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>); 
+    void reset();
+    void pauseScreen();
+    void readInput();
  
 private:
-    void gameOver(sf::RenderWindow &window);
-    void playing(sf::RenderWindow &window);
-    void updateLives(sf::RenderWindow &window,player game);
+    sf::Texture getTexture();
+    void LoadText();
+    void initBullets(sf::RenderWindow &,std::vector<bullet*> ); 
+    void initSprites(sf::Sprite&,char);
+    sf::IntRect catchTextureByType(char,int);    
+    void initPlayer(player);
+    void initInvaders(sf::RenderWindow &,std::vector<invader*>);    
+    void initBullets(std::vector<bullet*>);    
+    void gameOver(sf::RenderWindow &window,player);
+    void playing(sf::RenderWindow &window,player);
+    void updateLives(sf::RenderWindow &window,player);
     void initAll();
     void Animate();
     void LoadTexture();
-    player gamer;
     string scoreTextstring;     
-    sf::RenderWindow *gameScreen;//(sf::VideoMode(800, 600), "Space Invaders");
     sf::Sprite invadersSprite;
     sf::Sprite playerSprite;
     sf::Sprite lifeSprite;
@@ -39,12 +43,14 @@ private:
     sf::Sprite ufoSprite;
     sf::Sprite blockSprite;
     sf::Texture texture;
+    sf::Texture texturePlayer;
     sf::Text scoreText;
     sf::Text shipsText;
-    sf::Text splashScreen;
+    sf::Text splashScreenText;
     sf::Text gameOvert;
     sf::Font font;
-    sf::Time delayTime;    
+    sf::Time delayTime;
+    int animation;
     
 };
 

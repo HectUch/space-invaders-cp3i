@@ -6,6 +6,7 @@
 class player{
 public:    
         player();
+        void setPosition(float);
         int getLives(void );
         void wasHit(void );
         int getScore(void);
