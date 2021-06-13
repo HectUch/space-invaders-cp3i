@@ -2,6 +2,7 @@
 #include "ScreenGen.h"
 #include "player.h"
 #include "bullet.h"
+#include "barrier.h"
 #include "invader.h"
 #include <vector>
 #define GAMEENGINE_H
@@ -15,6 +16,7 @@ public:
         player getPlayer();
         std::vector<invader*> getInvaders();
         std::vector<bullet*> getBullets();
+        std::vector<barrier*> getBarriers();
                
 private:
         void collision();
@@ -30,6 +32,7 @@ private:
         player *gamer;
         std::vector<invader*> earthDestroyers;//11*5 Invaders
         std::vector<bullet*> bullets;
+        std::vector<barrier*> barriers;
         invader ufo;        
 };
 

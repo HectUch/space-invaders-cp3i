@@ -2,6 +2,7 @@
 #include "ScreenGen.h"
 #include "player.h"
 #include "bullet.h"
+#include "barrier.h"
 #include "invader.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -27,9 +28,6 @@ void ScreenGen::initPlayer(player elPapitoSavior){
      
 }
 
-void ScreenGen::initBullets(std::vector<bullet*> tiros){
-   
-}
 
 void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){
     
@@ -57,6 +55,14 @@ void ScreenGen::initSprites(sf::Sprite &sprite,char type){
         sprite.setTexture(texturePlayer);
         sprite.setScale(sf::Vector2f(0.09f, 0.09f));
         return;
+    }
+    
+    if(type == 'Q'){
+        sprite.setTexture(textureProjectile);
+        sprite.setTextureRect(sf::IntRect(0, 0, 3, 7));
+        sprite.setScale(sf::Vector2f(2, 2));
+        return;
+        
     }
     
    sprite.setTexture(texture);   
@@ -108,7 +114,11 @@ void ScreenGen::LoadTexture(){
     if (!texturePlayer.loadFromFile("images/player.png"))
     {
     // error...
-    }    
+    }
+    if (!textureProjectile.loadFromFile("images/projectile.png"))
+    {
+    // error...
+    }        
 }
 
 void ScreenGen::LoadText(){
@@ -186,7 +196,7 @@ this->LoadTexture();
 for(int n = 0; n < bulletss1.size(); n++){
             sf::Sprite poep;
             //this->LoadTexture();
-            this->initSprites(poep,'C');
+            this->initSprites(poep,'Q');
             //bulletsprite1.setTextureRect(this->catchTextureByType('C',2));//Crab2
             poep.setPosition(bulletss1[n]->getX(),bulletss1[n]->getY());
             poep.setColor(sf::Color(255,0, 255)); // Rood./
@@ -197,8 +207,21 @@ for(int n = 0; n < bulletss1.size(); n++){
    
 }
 
+void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> barrierss){
+    
+for(int l = 0; l < barrierss.size(); l++){
+            sf::RectangleShape rectangle(sf::Vector2f(10.f, 10.f));
+            rectangle.setPosition(barrierss[l]->getX(),barrierss[l]->getY());
+            rectangle.setFillColor(sf::Color(255,0, 255)); // Rood./
+            //bulletsprite1.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
+            window.draw(rectangle);
+}
+            
+   
+}
 
-void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets){
+
+void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers){
     
     window.clear();
     
@@ -208,6 +231,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     //cout << this->animation;
     this->initInvaders(window,allienLoco);
     this->initBullets(window,gekBullets);
+    this->initBarriers(window,gekBarriers);
     this->updateLives(window,gamer);
     
     if(gamer.getLives() == 0) 
