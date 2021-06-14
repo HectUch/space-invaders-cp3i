@@ -1,11 +1,11 @@
 cc = g++
 #Add new classes to this OBJS, Ex: NewClass.o
 OBJS = main.o ScreenGen.o player.o invader.o bullet.o gameEngine.o barrier.o
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system
-LIBSAUDIO = -lsfml-audio
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
 
 main :  $(OBJS) #If this is updated, it only compiles the file that was updated
-	${cc}  $(OBJS) -o spaceInvaders $(LIBS)
+	${cc}  $(OBJS) -o spaceInvaders $(LIBS) 
 
 #Here you should add the files here. Ex: NewClass: NewClass.h, Only changed files will be compiled
 main.o : ScreenGen.h	player.h

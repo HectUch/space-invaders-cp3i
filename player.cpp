@@ -2,13 +2,11 @@
 #include "player.h"
 #define PLAYER_H 
 
-player::player(){
-    
+player::player(){    
     this->lives = 3;
-    this->score = 3500;
+    this->score = 0;
     this->x = 400;//InitialPosition
-    this->y = 550;//InitalPosition
-   
+    this->y = 550;//InitalPosition   
 }
 
 void player::setPosition(float onlyX){
@@ -35,5 +33,8 @@ int player::getScore(void){
     return this->score;
 }
 
+void player::setScore(int Score){
+    this->score += Score;
+}
 
 #endif

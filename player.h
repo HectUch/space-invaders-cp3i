@@ -10,6 +10,7 @@ public:
         int getLives(void );
         void wasHit(void );
         int getScore(void);
+        void setScore(int Score);
         float getX(void );
         float getY(void );
  

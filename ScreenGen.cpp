@@ -13,33 +13,29 @@
 using namespace std;
 
 ScreenGen::ScreenGen(sf::RenderWindow &window){    
-        animation = 1;  
-        
+        animation = 1;          
 }
 
-void ScreenGen::initPlayer(player elPapitoSavior){
-   
+void ScreenGen::initPlayer(player elPapitoSavior){   
     //this->gamer = elPapitoSavior;
     this->initSprites(playerSprite,'P');
     this->playerSprite.setPosition(elPapitoSavior.getX(),elPapitoSavior.getY());
     //this->animation = 1;
     scoreTextstring = "Score : " + to_string(elPapitoSavior.getScore());
-    scoreText.setString(scoreTextstring);
-     
+    scoreText.setPosition(2.f,10.f);   
+    scoreText.setString(scoreTextstring);     
 }
 
 
-void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){
-    
+void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
         if(!EarthDestroyers[i]->isAlive())
             continue;
-         this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
-        this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
-        window.draw(invadersSprite);
-    }
-    
+            this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
+            this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
+            window.draw(invadersSprite);
+    }    
 }
 
 void ScreenGen::initAll(){
@@ -55,16 +51,13 @@ void ScreenGen::initSprites(sf::Sprite &sprite,char type){
         sprite.setTexture(texturePlayer);
         sprite.setScale(sf::Vector2f(0.09f, 0.09f));
         return;
-    }
-    
+    }    
     if(type == 'Q'){
         sprite.setTexture(textureProjectile);
         sprite.setTextureRect(sf::IntRect(0, 0, 3, 7));
         sprite.setScale(sf::Vector2f(2, 2));
-        return;
-        
-    }
-    
+        return;        
+    }    
    sprite.setTexture(texture);   
    sprite.setTextureRect(this->catchTextureByType(type,this->animation));
    sprite.setColor(sf::Color(0,255, 0)); // Rood./
@@ -92,14 +85,19 @@ sf::IntRect ScreenGen::catchTextureByType(char type,int animation){
 
 void ScreenGen::updateLives(sf::RenderWindow &window,player gamer){
     
-    if(gamer.getLives() == 0)return;
+    shipsText.setFont(font);
+    shipsText.setString("Ships : ");
+    shipsText.setCharacterSize(15);
+    shipsText.setFillColor(sf::Color::White);
+    shipsText.setPosition(630.f,12.f);     
+    if(gamer.getLives() == 0)return; 
     
     else{
         int lifes=gamer.getLives();
-        float point=0;
+        float point=600.f;
         for(int i = 0; i < lifes;i++){
-                point =60.0+30*i;
-                lifeSprite.setPosition(point,560.f);
+                point =700.0+30*i;
+                lifeSprite.setPosition(point,2.f);
                 lifeSprite.setScale(sf::Vector2f(0.06f, 0.06f)); 
                 window.draw(lifeSprite);
         }
@@ -129,14 +127,10 @@ void ScreenGen::LoadText(){
     scoreText.setFont(font);
     scoreText.setString("Score : 0");
     scoreText.setCharacterSize(15);
+    scoreText.setPosition(2.f,10.f);    
     scoreText.setFillColor(sf::Color::White);    
     
-    shipsText.setFont(font);
-    shipsText.setString("Ships : ");
-    shipsText.setCharacterSize(15);
-    shipsText.setFillColor(sf::Color::White);
-    shipsText.setPosition(0.f,570.f);  
-    
+
 }
 
 void ScreenGen::gameOver(sf::RenderWindow &window,player gamer){
@@ -179,8 +173,7 @@ void ScreenGen::playing(sf::RenderWindow &window,player gamer){
         window.draw(playerSprite);
         updateLives(window,gamer);         
         window.draw(scoreText);
-        window.draw(shipsText);
-        
+        window.draw(shipsText);       
         
         //gamer.wasHit();
 }
@@ -202,9 +195,7 @@ for(int n = 0; n < bulletss1.size(); n++){
             poep.setColor(sf::Color(255,0, 255)); // Rood./
             //bulletsprite1.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
             window.draw(poep);
-}
-            
-   
+}  
 }
 
 void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> barrierss){
@@ -215,8 +206,7 @@ for(int l = 0; l < barrierss.size(); l++){
             rectangle.setFillColor(sf::Color(255,0, 255)); // Rood./
             //bulletsprite1.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
             window.draw(rectangle);
-}
-            
+}           
    
 }
 
@@ -240,23 +230,9 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
         playing(window,gamer);
     }
     
-    window.display();
-    
+    window.display(); 
     
 
-   /*     
-    if (numberImage == 1){                                
-          playerSprite.setTextureRect(this->catchTextureByType('C',numberImage));//Crab1
-          playerSprite.setColor(sf::Color(0,255, 0)); // Rood./ 
-          numberImage = 2;
-    }
-    else
-    {
-        numberImage = 1;
-        playerSprite.setTextureRect(this->catchTextureByType('C',numberImage));//Crab2
-        playerSprite.setColor(sf::Color(255,0, 255)); // Rood./
-    }      */  
-    
     sf::sleep(delayTime);
     //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
     }   

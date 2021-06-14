@@ -8,8 +8,11 @@ public:
         float getX(void );
         float getY(void ); 
         void setPosition(float);
+        void shootByInvader();
+        int getDirection();        
 private:
-        float x,y;   
+        float x,y;
+        int direction;
 };
 
 #endif
