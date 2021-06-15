@@ -20,6 +20,8 @@ public:
         std::vector<barrier*> getBarriers();
          int initSound( );        
 private:
+        bool isBulletInTheArea(bullet, player);
+        bool isBulletInTheArea(bullet, barrier);
         void collision();
         void invadersShoot();
         int timesOneSide;

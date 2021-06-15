@@ -45,6 +45,7 @@ private:
     sf::Sprite ufoSprite;
     sf::Sprite blockSprite;
     sf::Texture texture;
+    sf::Texture textureAll;
     sf::Texture texturePlayer;
     sf::Texture textureProjectile;
     sf::Text scoreText;

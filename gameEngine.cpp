@@ -386,36 +386,59 @@ std::vector<invader*> gameEngine::getInvaders(){
  }
 
 void gameEngine::collision(){
+    
     int distanceBulletInvader = -1;
     
-    for(int n = 0; n < this->bullets.size();n++) {
+     for(int j = 0; j < this->bullets.size();j++) {
         for(int b = 0; b < this->barriers.size();b++){
-               if((bullets[n]->getX() >= barriers[b]->getX()) && (bullets[n]->getX() <= (barriers[b]->getX() + 5))){
-                   if(bullets[n]->getY() == barriers[b]->getY()){
+            
+               if(isBulletInTheArea(*(this->bullets[j]), *(this->barriers[b]))){                       
                         barriers.erase(barriers.begin()+b);
                         //alsoDeleteBullets
-                        bullets.erase(bullets.begin() + n);
-                 break;
-                    }  
+                        bullets.erase(bullets.begin() + j);
+                 break;                
                }
         }
-    }
-    
-    for(int j = 0; j < this->bullets.size();j++) {
+        
+        if(this->bullets[j]->getDirection() == -1 ){
+            if(isBulletInTheArea(*(this->bullets[j]), *(this->gamer))){            
+                    this->gamer->wasHit();
+                    bullets.erase(bullets.begin() + j);                    
+            }
+            continue;//even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
+        }
+        
+        
         for(int i = 0; i < this->earthDestroyers.size();i++){
-               if((bullets[j]->getX() >= earthDestroyers[i]->getX()) && (bullets[j]->getX() <= (earthDestroyers[i]->getX() + 20))){
-                   if((bullets[j]->getY() <= earthDestroyers[i]->getY()) && (bullets[j]->getY() >= (earthDestroyers[i]->getY() - 20))){
+           if(!this->earthDestroyers[i]->isAlive()){
+                earthDestroyers.erase(earthDestroyers.begin()+i);
+                continue;
+            }
+            if(isBulletInTheArea(*(this->bullets[j]),*(this->earthDestroyers[i]))){
                         this->gamer->setScore(earthDestroyers[i]->getScore());
-                            earthDestroyers.erase(earthDestroyers.begin()+i);
+                             //earthDestroyers.erase(earthDestroyers.begin()+i);
                             //alsoDeleteBullets
-                            bullets.erase(bullets.begin() + j);
+                         bullets.erase(bullets.begin() + j);
                  break;
-                    }
-               }
-        }
+            }
+            }
+        
     }
+}
+
+bool gameEngine::isBulletInTheArea(bullet balas, barrier elBadBoys){
     
+    if(balas.getX() < elBadBoys.getX() || balas.getY() < elBadBoys.getY())
+        return false;
     
+    float x = balas.getX() - elBadBoys.getX();
+    float y = balas.getY() - elBadBoys.getY();
+    float distance = sqrt(x*x+y*y);
+        
+    if(distance <= 5.f)
+        return true;
+    else
+        return false;
 }
 
 bool gameEngine::isBulletInTheArea(bullet balas, invader elBadBoys){
@@ -427,7 +450,22 @@ bool gameEngine::isBulletInTheArea(bullet balas, invader elBadBoys){
     float y = balas.getY() - elBadBoys.getY();
     float distance = sqrt(x*x+y*y);
         
-    if(distance <= 3.f)
+    if(distance <= 30.f)
+        return true;
+    else
+        return false;
+}
+
+bool gameEngine::isBulletInTheArea(bullet balas, player elBadBoys){
+    
+    if( balas.getY() < 540.f)
+        return false;
+    
+    float x = balas.getX() - elBadBoys.getX();
+    float y = balas.getY() - elBadBoys.getY();
+    float distance = sqrt(x*x+y*y);
+        
+    if(distance <= 30.f)
         return true;
     else
         return false;
@@ -461,22 +499,15 @@ void gameEngine::readInput(){
     
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-              // left key is pressed: move our character
-             //playerSprite.move(-20.f, 0.f);
              this->gamer->setPosition(this->gamer->getX() - 20);
 }
 
 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-              // left key is pressed: move our character
-             //playerSprite.move(20.f, 0.f);
             this->gamer->setPosition(this->gamer->getX() + 20);
 }
 
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-              // left key is pressed: move our character
-             //playerSprite.move(-20.f, 0.f);
-             //bullet bullet1(this->gamer->getX(), this->gamer->getY());
              bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
              this-> shootSound( );
              }

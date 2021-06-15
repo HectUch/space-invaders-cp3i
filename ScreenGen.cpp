@@ -13,7 +13,8 @@
 using namespace std;
 
 ScreenGen::ScreenGen(sf::RenderWindow &window){    
-        animation = 1;          
+        animation = 1;
+        this->LoadText();    
 }
 
 void ScreenGen::initPlayer(player elPapitoSavior){   
@@ -21,7 +22,7 @@ void ScreenGen::initPlayer(player elPapitoSavior){
     this->initSprites(playerSprite,'P');
     this->playerSprite.setPosition(elPapitoSavior.getX(),elPapitoSavior.getY());
     //this->animation = 1;
-    scoreTextstring = "Score : " + to_string(elPapitoSavior.getScore());
+    scoreTextstring = "Score : < " + to_string(elPapitoSavior.getScore()) + " >";
     scoreText.setPosition(2.f,10.f);   
     scoreText.setString(scoreTextstring);     
 }
@@ -40,9 +41,9 @@ void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> Eart
 
 void ScreenGen::initAll(){
     this->LoadTexture();
-    delayTime = sf::milliseconds(100);
+    delayTime = sf::milliseconds(10);
     this->initSprites(lifeSprite,'P');
-    this->LoadText();    
+    
 }
 
 void ScreenGen::initSprites(sf::Sprite &sprite,char type){ 
@@ -79,8 +80,10 @@ sf::IntRect ScreenGen::catchTextureByType(char type,int animation){
         return sf::IntRect(240, 100, 90, 100); //Barata 1
      else if((type == 'B') && animation == 2)
         return sf::IntRect(320, 100, 90, 100);//Barata 2
+    else if((type == 'B') && animation == 2)
+        return sf::IntRect(320, 100, 90, 100);//Barata 2
     else
-        return sf::IntRect(0, 0, 160, 100);//UFO
+        return sf::IntRect(780,275, 300, 300);//Explosion
 }
 
 void ScreenGen::updateLives(sf::RenderWindow &window,player gamer){
@@ -109,6 +112,10 @@ void ScreenGen::LoadTexture(){
     {
     // error...
     }
+    if (!textureAll.loadFromFile("images/allSprites.png"))
+    {
+    // error...
+    }
     if (!texturePlayer.loadFromFile("images/player.png"))
     {
     // error...
@@ -125,7 +132,7 @@ void ScreenGen::LoadText(){
         //Error...
     }
     scoreText.setFont(font);
-    scoreText.setString("Score : 0");
+    scoreText.setString("Score : < 0 >");
     scoreText.setCharacterSize(15);
     scoreText.setPosition(2.f,10.f);    
     scoreText.setFillColor(sf::Color::White);    

@@ -24,6 +24,7 @@ invader::invader(){
 
 void invader::getHit(){
         this->lives = 0;
+        this->type = 'Z';
 }
 void invader::setPosition(float x,float y){
     this->x = x;
@@ -45,6 +46,7 @@ bool invader::isAlive(){
 }
 
 int invader::getScore(void){
+    this->getHit();
     return this->score;
 }
 
