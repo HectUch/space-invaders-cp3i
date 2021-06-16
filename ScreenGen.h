@@ -15,7 +15,7 @@ class ScreenGen{
 public:    
     ScreenGen(sf::RenderWindow &);
     void splashScreen();
-    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<barrier*>); 
+    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
     void reset();
     void pauseScreen();
     void readInput();
@@ -36,6 +36,7 @@ private:
     void initAll();
     void Animate();
     void LoadTexture();
+    void isPaused(sf::RenderWindow &window);
     string scoreTextstring;     
     sf::Sprite invadersSprite;
     sf::Sprite playerSprite;

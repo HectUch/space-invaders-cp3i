@@ -37,7 +37,7 @@ int main()
     //is it possible to do the comunication in between both as a FIFO buffer?
     
     //Is the UFO one more invaders generated dynamically like bullets? Decision we should take as a group.
-    myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getBarriers());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
+    myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
     
     }
     

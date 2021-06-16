@@ -17,6 +17,7 @@ gameEngine::gameEngine(){
     buffer = new sf::SoundBuffer();    
     initSound( );
     
+    pause = false;
     //Game logic initialization
    gamer = new player();
    float invaderX = 40.f;
@@ -295,6 +296,10 @@ int gameEngine::initSound( ){
        return 0;
 }
 
+bool gameEngine::paused(){
+        return this->pause;
+}
+
 void gameEngine::invadersShoot(){
     
     if(lastShoot == randomShootingTime){
@@ -339,7 +344,14 @@ void gameEngine::invadersCometoEarth(){
 }
 void gameEngine::runGame(){
     
-    this->readInput();//reads keyboard and updates player position
+    
+      this->readInput();//reads keyboard and updates player position
+      
+    if(this->pause == true){
+        return;
+    }
+    
+  
     this->invadersCometoEarth();//spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
         //Add all the smartiness of the game here, shoots, space invaders
      this->moveBullets();
@@ -366,23 +378,9 @@ std::vector<invader*> gameEngine::getInvaders(){
     
 }
 
-//void gameEngine::collision(){
-    //int distanceBulletInvader = -1;
-    
-    //for(int j = 0; j < this->bullets.size();j++) 
-        //for(int i = 0; i < this->earthDestroyers.size();i++)
-               //if(isBulletInTheArea(*(this->bullets[j]),*(this->earthDestroyers[i]))){
-                 //this->earthDestroyers[i]->getHit();
-                 //alsoDeleteBullets
-                //this->bullets[j]->setPosition(-10.f);
-                 //break;
-            //}   
-//}
 
- void gameEngine::shootSound( ){
-     
-     this->sound->play();
-     
+ void gameEngine::shootSound( ){     
+     this->sound->play();     
  }
 
 void gameEngine::collision(){
@@ -492,11 +490,15 @@ void gameEngine::moveBullets(){
             }
         }    
 }
- 
-
 
 void gameEngine::readInput(){
     
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+             this->pause = !pause;
+}
+
+if(pause == true)
+    return;//This way it wont allow the player to move
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
              this->gamer->setPosition(this->gamer->getX() - 20);

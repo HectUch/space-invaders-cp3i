@@ -217,8 +217,22 @@ for(int l = 0; l < barrierss.size(); l++){
    
 }
 
+void ScreenGen::isPaused(sf::RenderWindow &window){
+    
+    gameOvert.setFont(font);
+    gameOvert.setString("PAUSED");
+    gameOvert.setCharacterSize(35);
+    gameOvert.setFillColor(sf::Color::White);
+    gameOvert.setPosition(300.f,250.f);
+    window.draw(scoreText);
+    window.draw(gameOvert);
+    window.draw(playerSprite);
+    updateLives(window,gamer);    
+    
+}
 
-void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers){
+
+void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers,bool isPause){
     
     window.clear();
     
@@ -234,7 +248,10 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     if(gamer.getLives() == 0) 
         this->gameOver(window,gamer);
     else{
-        playing(window,gamer);
+        if(!isPause)
+            playing(window,gamer);
+        else 
+            isPaused(window);
     }
     
     window.display(); 

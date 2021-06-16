@@ -13,7 +13,7 @@ public:
         gameEngine();
         void runGame();
         void restartGame();
-        void pause();
+        bool paused();
         player getPlayer();
         std::vector<invader*> getInvaders();
         std::vector<bullet*> getBullets();
@@ -40,7 +40,7 @@ private:
         std::vector<bullet*> bullets;
         std::vector<barrier*> barriers;
         invader ufo; 
-        
+        bool pause;
         //Sound Effects
         sf::Sound *sound;
         sf::SoundBuffer *buffer;
