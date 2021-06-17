@@ -4,12 +4,11 @@
 
 class player : public element
 {
-public:    
+public:
         player();
         int getScore(void);
-         
 private:
-        int bullets;   
+        int bullets;
 };
 
 #endif
