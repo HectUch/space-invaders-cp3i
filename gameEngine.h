@@ -3,6 +3,7 @@
 #include "ScreenGen.h"
 #include "player.h"
 #include "bullet.h"
+#include "element.h"
 #include "barrier.h"
 #include "invader.h"
 #include <vector>
@@ -20,6 +21,7 @@ public:
         std::vector<barrier*> getBarriers();
          int initSound( );        
 private:
+        void initBarriers(int,int);
         bool isBulletInTheArea(bullet, player);
         bool isBulletInTheArea(bullet, barrier);
         void collision();

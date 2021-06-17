@@ -1,6 +1,6 @@
 cc = g++
 #Add new classes to this OBJS, Ex: NewClass.o
-OBJS = main.o ScreenGen.o player.o invader.o bullet.o gameEngine.o barrier.o
+OBJS = main.o  player.o invader.o bullet.o  barrier.o element.o ScreenGen.o gameEngine.o
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 
@@ -15,6 +15,7 @@ invader.o : invader.h
 bullet.o : bullet.h
 gameEngine.o : gameEngine.h
 barrier.o : barrier.h
+element.o : element.h
 
 #These rules bellow are implicit in the rules above
 #main.cpp ScreenGen.h #If this is updated, it only compiles this files

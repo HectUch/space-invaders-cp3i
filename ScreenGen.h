@@ -36,7 +36,7 @@ private:
     void initAll();
     void Animate();
     void LoadTexture();
-    void isPaused(sf::RenderWindow &window);
+    void isPaused(sf::RenderWindow &window,player gamer);
     string scoreTextstring;     
     sf::Sprite invadersSprite;
     sf::Sprite playerSprite;

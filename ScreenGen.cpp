@@ -1,5 +1,6 @@
 #ifndef SCREENGEN_H
 #include "ScreenGen.h"
+#include "element.h"
 #include "player.h"
 #include "bullet.h"
 #include "barrier.h"
@@ -31,11 +32,13 @@ void ScreenGen::initPlayer(player elPapitoSavior){
 void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
-        if(!EarthDestroyers[i]->isAlive())
+        if(!EarthDestroyers[i]->isAlive()){
             continue;
-            this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
-            this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
-            window.draw(invadersSprite);
+        }
+        
+        this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
+        this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
+        window.draw(invadersSprite);
     }    
 }
 
@@ -210,14 +213,13 @@ void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> bar
 for(int l = 0; l < barrierss.size(); l++){
             sf::RectangleShape rectangle(sf::Vector2f(10.f, 10.f));
             rectangle.setPosition(barrierss[l]->getX(),barrierss[l]->getY());
-            rectangle.setFillColor(sf::Color(255,0, 255)); // Rood./
-            //bulletsprite1.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
-            window.draw(rectangle);
+            rectangle.setFillColor(sf::Color(0,255,0)); // Rood./
+             window.draw(rectangle);
 }           
    
 }
 
-void ScreenGen::isPaused(sf::RenderWindow &window){
+void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
     
     gameOvert.setFont(font);
     gameOvert.setString("PAUSED");
@@ -251,7 +253,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
         if(!isPause)
             playing(window,gamer);
         else 
-            isPaused(window);
+            isPaused(window,gamer);
     }
     
     window.display(); 

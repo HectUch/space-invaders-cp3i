@@ -12,7 +12,6 @@ invader::invader(float x,float y,char type){
    
 }
 
-
 invader::invader(){
     
     this->lives = 1;
@@ -22,40 +21,8 @@ invader::invader(){
    
 }
 
-void invader::getHit(){
-        this->lives = 0;
-        this->type = 'Z';
-}
-void invader::setPosition(float x,float y){
-    this->x = x;
-    this->y = y;
-    
-}
-
 char invader::getType(void){
     return this->type;   
-}
-
-bool invader::isAlive(){
-    
-    if(this->lives <= 0)
-        return false;
-    else
-        return true;
-    
-}
-
-int invader::getScore(void){
-    this->getHit();
-    return this->score;
-}
-
-float invader::getX(void){
-    return this->x;
-}
-
-float invader::getY(void){
-    return this->y;
 }
 
 
