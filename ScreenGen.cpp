@@ -15,7 +15,8 @@ using namespace std;
 
 ScreenGen::ScreenGen(sf::RenderWindow &window){    
         animation = 1;
-        this->LoadText();    
+        this->LoadText();   
+        this->initAll();
 }
 
 void ScreenGen::initPlayer(player elPapitoSavior){   
@@ -32,9 +33,9 @@ void ScreenGen::initPlayer(player elPapitoSavior){
 void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
-        if(!EarthDestroyers[i]->isAlive()){
+       /* if(!EarthDestroyers[i]->isAlive()){
             continue;
-        }
+        }*/
         
         this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
         this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
@@ -44,10 +45,43 @@ void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> Eart
 
 void ScreenGen::initAll(){
     this->LoadTexture();
-    delayTime = sf::milliseconds(10);
+    delayTime = sf::milliseconds(100);
     this->initSprites(lifeSprite,'P');
+
     
 }
+
+  void ScreenGen::splashScreen(sf::RenderWindow &window){
+      int color = 255;
+      cout << "I am here\n";
+      for(int i = 0; i < 100; i++){
+          window.clear();
+          if(i < 50){
+            
+            gameOvert.setFont(font);
+            gameOvert.setString("The C++ Jongens  : Present ");
+            gameOvert.setCharacterSize(35);
+            gameOvert.setFillColor(sf::Color::White);
+            gameOvert.setPosition(300.f,250.f);            
+            
+            window.draw(gameOvert);
+            color = color - 25*i;
+          }
+        else{
+            gameOvert.setFont(font);
+            gameOvert.setString("Enschede Invaders ");
+            gameOvert.setCharacterSize(35);
+            gameOvert.setFillColor(sf::Color::White);
+            gameOvert.setPosition(300.f,250.f);            
+            
+            window.draw(gameOvert);
+           
+        }
+        
+        this->delay();
+       
+      }      
+  }
 
 void ScreenGen::initSprites(sf::Sprite &sprite,char type){ 
     
@@ -114,14 +148,16 @@ void ScreenGen::LoadTexture(){
      if (!texture.loadFromFile("images/allInvaders.png"))
     {
     // error...
+        cout << "Could not load texture/n";
     }
-    if (!textureAll.loadFromFile("images/allSprites.png"))
+   /* if (!textureAll.loadFromFile("images/allSprites.png"))
     {
     // error...
-    }
+    }*/
     if (!texturePlayer.loadFromFile("images/player.png"))
     {
     // error...
+        cout << "Could not load texture Player/n";
     }
     if (!textureProjectile.loadFromFile("images/projectile.png"))
     {
@@ -134,6 +170,7 @@ void ScreenGen::LoadText(){
     if(!font.loadFromFile("fonts/space_invaders.ttf")){
         //Error...
     }
+
     scoreText.setFont(font);
     scoreText.setString("Score : < 0 >");
     scoreText.setCharacterSize(15);
@@ -238,15 +275,15 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     
     window.clear();
     
-    this->initAll();
+    //this->initAll();
     this->initPlayer(gamer);
-    this->Animate();
+    
     //cout << this->animation;
     this->initInvaders(window,allienLoco);
     this->initBullets(window,gekBullets);
     this->initBarriers(window,gekBarriers);
     this->updateLives(window,gamer);
-    
+    this->Animate();
     if(gamer.getLives() == 0) 
         this->gameOver(window,gamer);
     else{
@@ -259,9 +296,12 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     window.display(); 
     
 
-    sf::sleep(delayTime);
+    this->delay();
     //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
     }   
-
+    
+    void ScreenGen::delay(){
+            sf::sleep(delayTime);
+    }
 
 #endif

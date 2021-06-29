@@ -18,6 +18,7 @@ invader::invader(){
     this->score = 10;
     this->x = 400;
     this->y = 500;
+    this->type = 'B';
    
 }
 

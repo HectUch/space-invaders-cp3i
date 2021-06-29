@@ -19,7 +19,8 @@ public:
         std::vector<invader*> getInvaders();
         std::vector<bullet*> getBullets();
         std::vector<barrier*> getBarriers();
-         int initSound( );        
+         int initSound( );
+         bool exitGame();
 private:
         void initBarriers(int,int);
         bool isBulletInTheArea(bullet, player);
@@ -43,6 +44,7 @@ private:
         std::vector<barrier*> barriers;
         invader ufo; 
         bool pause;
+        bool exit;
         //Sound Effects
         sf::Sound *sound;
         sf::SoundBuffer *buffer;

@@ -14,7 +14,7 @@ using namespace std;
 class ScreenGen{
 public:    
     ScreenGen(sf::RenderWindow &);
-    void splashScreen();
+    void splashScreen(sf::RenderWindow &);
     void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
     void reset();
     void pauseScreen();
@@ -23,6 +23,7 @@ public:
 private:
     sf::Texture getTexture();
     void LoadText();
+    void delay();
     void initBullets(sf::RenderWindow &,std::vector<bullet*> ); 
     void initBarriers(sf::RenderWindow &,std::vector<barrier*> ); 
     void initSprites(sf::Sprite&,char);

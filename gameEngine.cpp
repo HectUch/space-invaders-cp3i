@@ -19,6 +19,7 @@ gameEngine::gameEngine(){
     initSound( );
     
     pause = false;
+    exit = false;
     //Game logic initialization
    gamer = new player();
    float invaderX = 40.f;
@@ -41,7 +42,7 @@ gameEngine::gameEngine(){
             invaderX = (20.f + j*40.f);
             invaderY = (30.f + i*40.f);
             earthDestroyers.push_back(new invader(invaderX,invaderY,tipo)); 
-            cout << invaderX << " " << invaderY << "\n";
+            cout << invaderX << " " << invaderY <<  " " << tipo << "\n";
         }
    }
    
@@ -57,6 +58,9 @@ gameEngine::gameEngine(){
 
 }
 
+bool gameEngine::exitGame(){
+        return this->exit;
+}
    
 int gameEngine::initSound( ){      
            
@@ -122,8 +126,7 @@ void gameEngine::runGame(){
       
     if(this->pause == true){
         return;
-    }
-    
+    }  
   
     this->invadersCometoEarth();//spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
         //Add all the smartiness of the game here, shoots, space invaders
@@ -150,7 +153,6 @@ std::vector<invader*> gameEngine::getInvaders(){
     return this->earthDestroyers;
     
 }
-
 
  void gameEngine::shootSound( ){     
      this->sound->play();     
@@ -268,6 +270,10 @@ void gameEngine::readInput(){
     
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
              this->pause = !pause;
+}
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)){
+             this->exit = !exit;
 }
 
 if(pause == true)
