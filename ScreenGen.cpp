@@ -34,9 +34,9 @@ void ScreenGen::initPlayer(player elPapitoSavior){
 void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
-       if(!EarthDestroyers[i]->isAlive()){
-            continue;
-        }
+       //if(!EarthDestroyers[i]->isAlive()){
+            //continue;
+        //}
         
         this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
         this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
