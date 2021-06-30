@@ -8,6 +8,7 @@ public:
         invader();
         invader(float x,float y,char type);
         char getType(void);
+        void setType(char);
 private:
         int bullets;
 

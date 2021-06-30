@@ -271,7 +271,6 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
 
 
 void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause){
-void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers,bool isPause){
     
     window.clear();
 

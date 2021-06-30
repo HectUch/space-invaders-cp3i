@@ -64,6 +64,7 @@ private:
     sf::Font font;
     sf::Time delayTime;
     int animation;
+    int menu;
     
 };
 
