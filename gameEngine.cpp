@@ -28,8 +28,6 @@ gameEngine::gameEngine(){
    randomShootingTime = 20;
    lastShoot = 0;
    timesOneSide = 0;
-
-   
     for(int i = 0;i < 5;i++)
    {
        if(i > 1 && i < 3)
@@ -45,17 +43,7 @@ gameEngine::gameEngine(){
             cout << invaderX << " " << invaderY <<  " " << tipo << "\n";
         }
    }
-   
-    this->invadersDirection = 0;
-    this->initBarriers(60,470);
-    this->initBarriers(260,470);
-    this->initBarriers(460,470);
-    this->initBarriers(660,470);
-       
-   
-   cout << earthDestroyers.size() << "\n";
-   
-
+   } 
 }
 
 bool gameEngine::exitGame(){
@@ -79,9 +67,10 @@ bool gameEngine::paused(){
 
 void gameEngine::invadersShoot(){
     
+    
+    
+    
     if(lastShoot == randomShootingTime){
-        lastShoot = 0;
-        bullet *invaderBullet = new bullet((this->earthDestroyers[earthDestroyers.size()-1]->getX() + 22), (this->earthDestroyers[earthDestroyers.size()-1]->getY()+2));
         invaderBullet->shootByInvader();
         bullets.push_back(invaderBullet);
     }
@@ -147,7 +136,6 @@ player gameEngine::getPlayer(){
 std::vector<bullet*> gameEngine::getBullets(){
      return this->bullets;     
 }
-
 std::vector<bullet*> gameEngine::getPlayerBullets(){
      return this->player_bullets;     
  }
@@ -339,7 +327,6 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
             this->gamer->setPosition(this->gamer->getX() + 20);
 }
-
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
              if(player_bullets.size()<=3){
