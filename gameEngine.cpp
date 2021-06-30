@@ -54,7 +54,6 @@ void gameEngine::initInvaders(){
            tipo = 'B';
         for(int j = 0;j < 11;j++)
         {
-            //point =60.0+30*i;
             invaderX = (20.f + j*40.f);
             invaderY = (30.f + i*40.f);
             earthDestroyers.push_back(new invader(invaderX,invaderY,tipo)); 
@@ -175,44 +174,73 @@ std::vector<invader*> gameEngine::getInvaders(){
 
 void gameEngine::collision(){
     
-    int distanceBulletInvader = -1;    
+    int distanceBulletInvader = -1;
     
-     for(int j = 0; j < this->bullets.size();j++) {
+    for(int i = 0; i < this->earthDestroyers.size();i++){
+           if(!this->earthDestroyers[i]->isAlive()){
+                earthDestroyers.erase(earthDestroyers.begin()+i);
+                //earthDestroyers[i]->setType('F');
+                continue;
+            }
+        }
+    
+     for(int j = 0; j < this->player_bullets.size();j++) {
         for(int b = 0; b < this->barriers.size();b++){
             
-               if(isBulletInTheArea(*(this->bullets[j]), *(this->barriers[b]))){                       
+               if(isBulletInTheArea(*(this->player_bullets[j]), *(this->barriers[b]))){                       
                         barriers.erase(barriers.begin()+b);
                         //alsoDeleteBullets
-                        bullets.erase(bullets.begin() + j);
+                        player_bullets.erase(player_bullets.begin()+j);
                  break;                
                }
         }
         
-        if(this->bullets[j]->getDirection() == -1 ){
-            if(isBulletInTheArea(*(this->bullets[j]), *(this->gamer))){            
+        if(this->player_bullets[j]->getDirection() == -1 ){
+            if(isBulletInTheArea(*(this->player_bullets[j]), *(this->gamer))){            
                     this->gamer->wasHit();
-                    bullets.erase(bullets.begin() + j);                    
+                    player_bullets.erase(player_bullets.begin() + j);                    
             }
             continue;//even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
         }
         
         
         for(int i = 0; i < this->earthDestroyers.size();i++){
-           if(!this->earthDestroyers[i]->isAlive()){
-                earthDestroyers.erase(earthDestroyers.begin()+i);
-                continue;
-            }
-            if(isBulletInTheArea(*(this->bullets[j]),*(this->earthDestroyers[i]))){
+            if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyers[i]))){
                         this->gamer->setScore(earthDestroyers[i]->getScore());
+                        earthDestroyers[i]->setType('F');
                              //earthDestroyers.erase(earthDestroyers.begin()+i);
                             //alsoDeleteBullets
-                         bullets.erase(bullets.begin() + j);
+                         player_bullets.erase(player_bullets.begin() + j);
                  break;
             }
             }
         
     }
+    
+    for(int j = 0; j < this->bullets.size();j++) {
+        for(int b = 0; b < this->barriers.size();b++){
+            
+               if(isBulletInTheArea(*(this->bullets[j]), *(this->barriers[b]))){                       
+                        barriers.erase(barriers.begin()+b);
+                        //alsoDeleteBullets
+                        bullets.erase(bullets.begin()+j);
+                        break;                
+               }
+        }
+        
+        if(isBulletInTheArea(*(this->bullets[j]), *(this->gamer))){            
+                this->gamer->wasHit();
+                bullets.erase(bullets.begin() + j);                    
+            }
+            //even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
+        
+    }
+    
 }
+
+std::vector<bullet*> gameEngine::getPlayerBullets(){
+     return this->player_bullets;     
+ }
 
 bool gameEngine::isBulletInTheArea(bullet balas, barrier elBadBoys){
     
@@ -258,28 +286,27 @@ bool gameEngine::isBulletInTheArea(bullet balas, player elBadBoys){
     else
         return false;
 }
-    
+      
 void gameEngine::moveBullets(){
     
     for(int j = 0; j < bullets.size(); j++){
-            if(bullets[j]->getDirection() == 1){
-                    if ((bullets[j]->getY() - 10) <= 0){
-                        bullets.erase(bullets.begin()+j);
-                    }
-                    else{
-                    bullets[j]->setPosition(bullets[j]->getY() - 10);
-                    }
-            }
-            else{
-                    if ((bullets[j]->getY() + 10) <= 0){
+                    if ((bullets[j]->getY() + 10) >= 600){
                         bullets.erase(bullets.begin()+j);
                     }
                     else{
                         bullets[j]->setPosition(bullets[j]->getY() + 10);
                     }
-            }
-        }    
-}
+    }
+    
+    for(int j = 0; j < player_bullets.size(); j++){
+                    if((player_bullets[j]->getY() - 10) <= 0){
+                        player_bullets.erase(player_bullets.begin()+j);
+                    }
+                    else{
+                    player_bullets[j]->setPosition(player_bullets[j]->getY() - 10);
+                    }
+    }
+}    
 
 int gameEngine::getScreen(){    
     return this->screen;  //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3    
@@ -324,9 +351,7 @@ else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
             else {
                 screen = 4;
                 this->exit = !exit;
-            }
-                
-
+            }     
 }
 }
 
@@ -350,9 +375,11 @@ else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 }
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-             bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
+             if(player_bullets.size()<=3){
+             player_bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
              this-> shootSound( );
              }
+         }
 }
 
 void gameEngine::initBarriers(int posx,int posy){

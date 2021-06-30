@@ -17,10 +17,8 @@ public:
     ScreenGen(sf::RenderWindow &);
     void splashScreen(sf::RenderWindow &);
     void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
-    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
     void reset();
     void pauseScreen();
-    void readInput();
     void MainMenu(sf::RenderWindow &,int);
     void highScore();
     void AboutTheGame();
@@ -43,7 +41,7 @@ private:
     void Animate();
     void LoadTexture();
     void isPaused(sf::RenderWindow &window,player gamer);
-    
+     sf::Texture textureExplosion;
     string scoreTextstring;     
     sf::Sprite invadersSprite;
     sf::Sprite playerSprite;
@@ -56,15 +54,14 @@ private:
     sf::Texture textureAll;
     sf::Texture texturePlayer;
     sf::Texture textureProjectile;
-    sf::Texture textureExplosion;
     sf::Text scoreText;
     sf::Text shipsText;
     sf::Text splashScreenText;
     sf::Text gameOvert;
     sf::Font font;
     sf::Time delayTime;
-    int animation;
     int menu;
+    int animation;
     
 };
 
