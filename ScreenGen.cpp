@@ -47,8 +47,6 @@ void ScreenGen::initAll(){
     this->LoadTexture();
     delayTime = sf::milliseconds(100);
     this->initSprites(lifeSprite,'P');
-
-    
 }
 
   void ScreenGen::splashScreen(sf::RenderWindow &window){
@@ -95,7 +93,17 @@ void ScreenGen::initSprites(sf::Sprite &sprite,char type){
         sprite.setTextureRect(sf::IntRect(0, 0, 3, 7));
         sprite.setScale(sf::Vector2f(2, 2));
         return;        
-    }    
+    }
+    if(type == 'F'){
+        //this->LoadTexture();
+        sprite.setTexture(textureExplosion);
+        sprite.setTextureRect(sf::IntRect(0, 0, 160, 100));
+        sprite.setScale(sf::Vector2f(0.3f, 0.3f));
+        //cout << "HITF/n";
+        sprite.setColor(sf::Color(255,255, 255)); // Rood./
+        //sprite.setScale(sf::Vector2f(2, 2));
+        return;        
+    }      
    sprite.setTexture(texture);   
    sprite.setTextureRect(this->catchTextureByType(type,this->animation));
    sprite.setColor(sf::Color(0,255, 0)); // Rood./
@@ -150,10 +158,11 @@ void ScreenGen::LoadTexture(){
     // error...
         cout << "Could not load texture/n";
     }
-   /* if (!textureAll.loadFromFile("images/allSprites.png"))
+   if (!textureExplosion.loadFromFile("images/explosion.png"))
     {
     // error...
-    }*/
+    cout << "Could not load texture Explosion/n";
+    }
     if (!texturePlayer.loadFromFile("images/player.png"))
     {
     // error...
@@ -271,7 +280,7 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
 }
 
 
-void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers,bool isPause){
+void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause){
     
     window.clear();
     
@@ -281,6 +290,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     //cout << this->animation;
     this->initInvaders(window,allienLoco);
     this->initBullets(window,gekBullets);
+    this->initBullets(window,gekPlayerBullets);
     this->initBarriers(window,gekBarriers);
     this->updateLives(window,gamer);
     this->Animate();

@@ -18,6 +18,7 @@ public:
         player getPlayer();
         std::vector<invader*> getInvaders();
         std::vector<bullet*> getBullets();
+        std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
          int initSound( );
          bool exitGame();
@@ -41,6 +42,7 @@ private:
         player *gamer;
         std::vector<invader*> earthDestroyers;//11*5 Invaders
         std::vector<bullet*> bullets;
+        std::vector<bullet*> player_bullets;
         std::vector<barrier*> barriers;
         invader ufo; 
         bool pause;
