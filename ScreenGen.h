@@ -12,14 +12,19 @@
 using namespace std;
 
 class ScreenGen{
+    
 public:    
     ScreenGen(sf::RenderWindow &);
     void splashScreen(sf::RenderWindow &);
     void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
+    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
     void reset();
     void pauseScreen();
     void readInput();
- 
+    void MainMenu(sf::RenderWindow &,int);
+    void highScore();
+    void AboutTheGame();
+    
 private:
     sf::Texture getTexture();
     void LoadText();
@@ -38,6 +43,7 @@ private:
     void Animate();
     void LoadTexture();
     void isPaused(sf::RenderWindow &window,player gamer);
+    
     string scoreTextstring;     
     sf::Sprite invadersSprite;
     sf::Sprite playerSprite;

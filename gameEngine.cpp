@@ -89,7 +89,7 @@ void gameEngine::invadersShoot(){
         lastShoot++;   
     }
 }
-   
+
 void gameEngine::invadersCometoEarth(){
     
     
@@ -122,8 +122,7 @@ void gameEngine::invadersCometoEarth(){
 void gameEngine::runGame(){
     
     
-      this->readInput();//reads keyboard and updates player position
-      
+     
     if(this->pause == true){
         return;
     }  
@@ -134,7 +133,11 @@ void gameEngine::runGame(){
     this->invadersShoot();
      //Collision Detection
      this->collision();
-    //Random creation of UFO    
+    //Random creation of UFO
+     if(earthDestroyers.size() == 0){
+         this->initInvaders();
+         level++;         
+     }
 }
 
 player gameEngine::getPlayer(){
@@ -173,22 +176,29 @@ void gameEngine::collision(){
                 continue;
             }
         }
+    int distanceBulletInvader = -1;    
     
      for(int j = 0; j < this->player_bullets.size();j++) {
+     for(int j = 0; j < this->bullets.size();j++) {
         for(int b = 0; b < this->barriers.size();b++){
             
                if(isBulletInTheArea(*(this->player_bullets[j]), *(this->barriers[b]))){                       
+               if(isBulletInTheArea(*(this->bullets[j]), *(this->barriers[b]))){                       
                         barriers.erase(barriers.begin()+b);
                         //alsoDeleteBullets
                         player_bullets.erase(player_bullets.begin()+j);
+                        bullets.erase(bullets.begin() + j);
                  break;                
                }
         }
         
         if(this->player_bullets[j]->getDirection() == -1 ){
             if(isBulletInTheArea(*(this->player_bullets[j]), *(this->gamer))){            
+        if(this->bullets[j]->getDirection() == -1 ){
+            if(isBulletInTheArea(*(this->bullets[j]), *(this->gamer))){            
                     this->gamer->wasHit();
                     player_bullets.erase(player_bullets.begin() + j);                    
+                    bullets.erase(bullets.begin() + j);                    
             }
             continue;//even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
         }
@@ -196,11 +206,17 @@ void gameEngine::collision(){
         
         for(int i = 0; i < this->earthDestroyers.size();i++){
             if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyers[i]))){
+           if(!this->earthDestroyers[i]->isAlive()){
+                earthDestroyers.erase(earthDestroyers.begin()+i);
+                continue;
+            }
+            if(isBulletInTheArea(*(this->bullets[j]),*(this->earthDestroyers[i]))){
                         this->gamer->setScore(earthDestroyers[i]->getScore());
                         earthDestroyers[i]->setType('F');
                              //earthDestroyers.erase(earthDestroyers.begin()+i);
                             //alsoDeleteBullets
                          player_bullets.erase(player_bullets.begin() + j);
+                         bullets.erase(bullets.begin() + j);
                  break;
             }
             }
@@ -277,10 +293,13 @@ void gameEngine::moveBullets(){
     
     for(int j = 0; j < bullets.size(); j++){
                     if ((bullets[j]->getY() + 10) >= 600){
+            if(bullets[j]->getDirection() == 1){
+                    if ((bullets[j]->getY() - 10) <= 0){
                         bullets.erase(bullets.begin()+j);
                     }
                     else{
                         bullets[j]->setPosition(bullets[j]->getY() + 10);
+                    bullets[j]->setPosition(bullets[j]->getY() - 10);
                     }
     }
     
@@ -294,13 +313,19 @@ void gameEngine::moveBullets(){
     }
 }    
 
-void gameEngine::readInput(){
-    
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-             this->pause = !pause;
+int gameEngine::getScreen(){    
+    return this->screen;  //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3    
 }
 
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)){
+int gameEngine::getOption(){
+     this->readInput();//reads keyboard
+    return this->option; //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3
+    
+}
+
+void gameEngine::readInput(){
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
              this->exit = !exit;
 }
 
@@ -319,6 +344,7 @@ else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
              if(player_bullets.size()<=3){
              player_bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
+             bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
              this-> shootSound( );
              }
          }

@@ -17,6 +17,7 @@ ScreenGen::ScreenGen(sf::RenderWindow &window){
         animation = 1;
         this->LoadText();   
         this->initAll();
+        menu = 1;
 }
 
 void ScreenGen::initPlayer(player elPapitoSavior){   
@@ -33,9 +34,9 @@ void ScreenGen::initPlayer(player elPapitoSavior){
 void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
-       /* if(!EarthDestroyers[i]->isAlive()){
+       if(!EarthDestroyers[i]->isAlive()){
             continue;
-        }*/
+        }
         
         this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
         this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
@@ -52,20 +53,10 @@ void ScreenGen::initAll(){
   void ScreenGen::splashScreen(sf::RenderWindow &window){
       int color = 255;
       cout << "I am here\n";
-      for(int i = 0; i < 100; i++){
-          window.clear();
-          if(i < 50){
-            
             gameOvert.setFont(font);
-            gameOvert.setString("The C++ Jongens  : Present ");
             gameOvert.setCharacterSize(35);
-            gameOvert.setFillColor(sf::Color::White);
-            gameOvert.setPosition(300.f,250.f);            
             
             window.draw(gameOvert);
-            color = color - 25*i;
-          }
-        else{
             gameOvert.setFont(font);
             gameOvert.setString("Enschede Invaders ");
             gameOvert.setCharacterSize(35);
@@ -74,12 +65,19 @@ void ScreenGen::initAll(){
             
             window.draw(gameOvert);
            
-        }
-        
-        this->delay();
-       
-      }      
-  }
+            gameOvert.setFont(font);
+            gameOvert.setString("Exit ");
+            gameOvert.setCharacterSize(25);
+            gameOvert.setFillColor(sf::Color::White);
+            gameOvert.setPosition(360.f,390.f);             
+            window.draw(gameOvert);
+            window.display();  
+            this->Animate();
+            this->delay();        
+    
+}
+
+
 
 void ScreenGen::initSprites(sf::Sprite &sprite,char type){ 
     
@@ -93,17 +91,7 @@ void ScreenGen::initSprites(sf::Sprite &sprite,char type){
         sprite.setTextureRect(sf::IntRect(0, 0, 3, 7));
         sprite.setScale(sf::Vector2f(2, 2));
         return;        
-    }
-    if(type == 'F'){
-        //this->LoadTexture();
-        sprite.setTexture(textureExplosion);
-        sprite.setTextureRect(sf::IntRect(0, 0, 160, 100));
-        sprite.setScale(sf::Vector2f(0.3f, 0.3f));
-        //cout << "HITF/n";
-        sprite.setColor(sf::Color(255,255, 255)); // Rood./
-        //sprite.setScale(sf::Vector2f(2, 2));
-        return;        
-    }      
+    }    
    sprite.setTexture(texture);   
    sprite.setTextureRect(this->catchTextureByType(type,this->animation));
    sprite.setColor(sf::Color(0,255, 0)); // Rood./
@@ -159,10 +147,12 @@ void ScreenGen::LoadTexture(){
         cout << "Could not load texture/n";
     }
    if (!textureExplosion.loadFromFile("images/explosion.png"))
+   /* if (!textureAll.loadFromFile("images/allSprites.png"))
     {
     // error...
     cout << "Could not load texture Explosion/n";
     }
+    }*/
     if (!texturePlayer.loadFromFile("images/player.png"))
     {
     // error...
@@ -281,19 +271,19 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
 
 
 void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause){
+void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<barrier*> gekBarriers,bool isPause){
     
     window.clear();
-    
+
     //this->initAll();
     this->initPlayer(gamer);
-    
-    //cout << this->animation;
     this->initInvaders(window,allienLoco);
     this->initBullets(window,gekBullets);
     this->initBullets(window,gekPlayerBullets);
     this->initBarriers(window,gekBarriers);
     this->updateLives(window,gamer);
     this->Animate();
+    
     if(gamer.getLives() == 0) 
         this->gameOver(window,gamer);
     else{
@@ -304,7 +294,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     }
     
     window.display(); 
-    
+    window.display();  
 
     this->delay();
     //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/

@@ -23,7 +23,6 @@ invader::invader(){
 }
 
 char invader::getType(void){
-    return this->type;
 }
 
 void invader::setType(char q){

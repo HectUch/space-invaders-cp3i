@@ -24,30 +24,29 @@ int main()
         
     //myGame.splashScreen(window);//Create a initial screen before the game, later in the project
     
+    while(gameMechanics.getScreen() == 0){
+        myGame.MainMenu(window,gameMechanics.getOption());
+    }
+    
+
     while (window.isOpen())
     {    
-        
+     
+    if(gameMechanics.exitGame()){
+        window.close();
+        return 0;        
+    }
     
-    sf::Event event;
-    
+    sf::Event event;    
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
             window.close();
     }
     
-    
     gameMechanics.runGame();//This will be responsible for the entire inteligence/operation of the game, collision detection, control of invaders, shoots and so on
-    //is it possible to do the comunication in between both as a FIFO buffer?
-    
+    //is it possible to do the comunication in between both as a FIFO buffer?    
     //Is the UFO one more invaders generated dynamically like bullets? Decision we should take as a group.
-    myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
-    if(gameMechanics.exitGame()){
-        window.close();
-        return 0;
-        
-    }
-    
 }
     
     return 0;
