@@ -9,9 +9,12 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <chrono>
 #define SCREENGEN_H
 
 using namespace std;
+
+using namespace std::chrono;
 
 ScreenGen::ScreenGen(sf::RenderWindow &window){    
         animation = 1;
@@ -317,7 +320,7 @@ sf::Texture ScreenGen::getTexture(){
 
 void ScreenGen::initBullets(sf::RenderWindow &window, std::vector<bullet*> bulletss1){
     
-this->LoadTexture();
+//this->LoadTexture();
     
 for(int n = 0; n < bulletss1.size(); n++){
             sf::Sprite poep;
@@ -357,7 +360,7 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
 }
 
 
-void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause){
+void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause, bool Timer){
     
     
     window.clear();
@@ -365,13 +368,26 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     //this->initAll();
     this->initPlayer(gamer);
     
+    
+    
     //cout << this->animation;
+    if (Timer){
+     this->Animate();   
+    }
+    
+    
     this->initInvaders(window,allienLoco);
+    
+    //auto start = high_resolution_clock::now();
+    
     this->initBullets(window,gekBullets);
     this->initBullets(window,gekPlayerBullets);
+    
+    //auto stop = high_resolution_clock::now();
+    
     this->initBarriers(window,gekBarriers);
     this->updateLives(window,gamer);
-    this->Animate();
+    
     if(gamer.getLives() == 0) 
         this->gameOver(window,gamer);
     else{
@@ -383,8 +399,14 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
     
     
     window.display();  
+    
+    
+    
+    //auto duration = duration_cast<microseconds> (stop - start);
+    
+    //cout << duration.count() << endl;
 
-    this->delay();
+    //this->delay();
     //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
     }   
     

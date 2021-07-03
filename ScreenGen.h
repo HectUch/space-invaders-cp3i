@@ -16,7 +16,7 @@ class ScreenGen{
 public:    
     ScreenGen(sf::RenderWindow &);
     void splashScreen(sf::RenderWindow &);
-    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<bullet*>, std::vector<barrier*>,bool isPause); 
+    void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<bullet*>, std::vector<barrier*>,bool isPause, bool); 
     void reset();
     void pauseScreen();
     void MainMenu(sf::RenderWindow &,int);
