@@ -42,6 +42,9 @@ float  element::getY(void){
 }
 
 void element::setPosition(float onlyX){
+     if(onlyX < 0 || onlyX > 755)
+         return;
+        
     this->x = onlyX;
 }
 

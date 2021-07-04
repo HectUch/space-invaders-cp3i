@@ -7,9 +7,16 @@
 #include "barrier.h"
 #include "invader.h"
 #include "gameEngine.h"
+#include <pthread.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <vector>
 #include <cmath>
+#include <chrono>
+#include <time.h>
 #define GAMEENGINE_H
+
+using namespace std::chrono;
 
 gameEngine::gameEngine(){
     
@@ -24,6 +31,8 @@ gameEngine::gameEngine(){
     //Game logic initialization
    gamer = new player();
     level = 1;
+    timeDelay_invader = 0;
+    timeDelay_bullet = 0;
 
     this->initInvaders();
    
@@ -56,8 +65,15 @@ void gameEngine::initInvaders(){
         {
             invaderX = (20.f + j*40.f);
             invaderY = (30.f + i*40.f);
-            earthDestroyers.push_back(new invader(invaderX,invaderY,tipo)); 
+            invader *alien = new invader(invaderX,invaderY,tipo);
+            earthDestroyers.push_back(alien); 
+            
+            if(i == 4)
+                earthDestroyersShooters.push_back(alien);     
+            
             cout << invaderX << " " << invaderY <<  " " << tipo << "\n";
+            
+            
         }
    } 
 }
@@ -84,71 +100,135 @@ bool gameEngine::paused(){
 void gameEngine::invadersShoot(){
     
     
-    int invader = earthDestroyers.size()-1;
+    int invader = earthDestroyersShooters.size()-1;
     
     if(invader < 1)
         return;
     
     if(lastShoot == randomShootingTime){
-        lastShoot = rand()%15;
-        bullet *invaderBullet = new bullet((this->earthDestroyers[rand()%invader]->getX() + 22), (this->earthDestroyers[rand()%invader]->getY()+2));
+        lastShoot = rand()%11;
+        bullet *invaderBullet = new bullet((earthDestroyersShooters[rand()%11]->getX() + 11), (earthDestroyersShooters[rand()%11]->getY()+11));
         invaderBullet->shootByInvader();
         bullets.push_back(invaderBullet);
+        //cout <<  invader << "\n";
+        
     }
     else{
         lastShoot++;   
     }
 }
 
-void gameEngine::invadersCometoEarth(){
+//void *gameEngine::invadersCometoEarth(void *arg){
     
+    void gameEngine::invadersCometoEarth(){
     
-        if(this->invadersDirection == 0){  
-            for(int i =0;i < earthDestroyers.size(); i++ )
-                this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()+10.f,this->earthDestroyers[i]->getY());   
-            
-            if(this->timesOneSide >= 33){ 
-                for(int i =0;i < earthDestroyers.size(); i++ )
-                    this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f); 
-                
-                this->invadersDirection = 1;
-                this->timesOneSide = 0;               
+    for(int jo = 0; jo < earthDestroyers.size(); jo++){
+        if ((earthDestroyers[jo]->getX() == 760) && (this->invadersDirection == 0)){
+            for(int i =0;i < earthDestroyers.size(); i++ ){
+                    this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f);
             }
-        }        
-        else{
-            for(int i =0;i < earthDestroyers.size(); i++ )
-                this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());           
-            if(this->timesOneSide == 33){ 
-                for(int i =0;i < earthDestroyers.size(); i++ )
-                    this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f);   
+            invadersDirection = 1;
+        }
+        if ((earthDestroyers[jo]->getX() == 0) && (this->invadersDirection == 1)){
+            for(int i =0;i < earthDestroyers.size(); i++ ){
+                    this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f);
+            }
+            invadersDirection = 0;
+        }
+        
+        
+    }
+    
+    if(this->invadersDirection == 0){  
+        for(int i =0;i < earthDestroyers.size(); i++ )
+            this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()+10.f,this->earthDestroyers[i]->getY());   
+        } 
+           
+    if(this->invadersDirection == 1){  
+        for(int i =0;i < earthDestroyers.size(); i++ )
+            this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());   
+        } 
+            //if(this->timesOneSide >= 33){ 
+                //for(int i =0;i < earthDestroyers.size(); i++ ){
+                    //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f); 
+                //}
+                //this->invadersDirection = 1;
+                //this->timesOneSide = 0;               
+            //}
+                
+            //for(int i =0;i < earthDestroyers.size(); i++ ){
+                //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());
+            //}           
+            //if(this->timesOneSide == 33){ 
+                //for(int i =0;i < earthDestroyers.size(); i++ )
+                    //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f);   
                
-                this->invadersDirection = 0;
-                this->timesOneSide = 0;                 
-            }       
-    } 
-    this->timesOneSide++;
+                //this->invadersDirection = 0;
+                //this->timesOneSide = 0;                 
+            //}
+    //this->timesOneSide++;
+    
+    ////return NULL;
 
 }
 void gameEngine::runGame(){
     
+    //int joe = 0;
+    
+    //auto start = high_resolution_clock::now();
     
     this->readInput();//reads keyboard and updates player position    
-     
-    if(this->pause == true){
+    
+     if(this->pause == true){
         return;
-    }  
-  
-    this->invadersCometoEarth();//spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
+    } 
+    
+     if (clock() > timeDelay_invader){
+    
+    this->invadersCometoEarth();
+    timeDelay_invader = clock() + 100000;
+    timer = true;
+    //spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
         //Add all the smartiness of the game here, shoots, space invaders
-     this->moveBullets();
-    this->invadersShoot();
+    }
+    else{
+        timer = false;
+        }
+        
+         if (clock() > timeDelay_bullet){
+             
+                    this->invadersShoot();
+             
+
+    timeDelay_bullet =clock() + 10000;
+    //spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
+        //Add all the smartiness of the game here, shoots, space invaders
+    }
+          this->moveBullets();
+     //pthread_create(&this->invadersCometoEarth, NULL, invadersCometoEarth, (void *)joe);
+          
+          this->collision();
+          
+//         auto start = high_resolution_clock::now();
+// 
+//     auto stop = high_resolution_clock::now();
+//     auto duration = duration_cast<microseconds> (stop - start);
+//     cout << duration.count() << endl;
+
+     //this->invadersShoot();
      //Collision Detection
-     this->collision();
+     
     //Random creation of UFO
      if(earthDestroyers.size() == 0){
          this->initInvaders();
          level++;         
      }
+     
+     //auto stop = high_resolution_clock::now();
+     
+     //auto duration = duration_cast<microseconds> (stop - start);
+     
+     //cout << duration.count() << endl;
 }
 
 player gameEngine::getPlayer(){
@@ -166,6 +246,10 @@ std::vector<bullet*> gameEngine::getBullets(){
 std::vector<invader*> gameEngine::getInvaders(){
     return this->earthDestroyers;
     
+}
+
+bool gameEngine::getTimer(){
+    return this->timer;
 }
 
  void gameEngine::shootSound( ){     
@@ -195,27 +279,42 @@ void gameEngine::collision(){
                }
         }
         
-        if(this->player_bullets[j]->getDirection() == -1 ){
-            if(isBulletInTheArea(*(this->player_bullets[j]), *(this->gamer))){            
-                    this->gamer->wasHit();
-                    player_bullets.erase(player_bullets.begin() + j);                    
+    
+    for(int i = 0; i < this->earthDestroyersShooters.size();i++){
+            if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyersShooters[i]))){
+                      for(int p = (earthDestroyers.size() -1); p > 0; --p){
+                                if ((earthDestroyers[p]->getX() == earthDestroyersShooters[i]->getX()) && (earthDestroyers[p]->getY() < earthDestroyersShooters[i]->getY()) ){
+                                        //cout << "joe";
+                                      earthDestroyersShooters.erase(earthDestroyersShooters.begin() + i);
+                                      earthDestroyersShooters.push_back(earthDestroyers[p]);
+                                       break;
+                                }
+                      }
             }
-            continue;//even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
-        }
+    }
+    
+//     for(int i = 0; i < earthDestroyersShooters.size(); i++){
+//             cout << earthDestroyersShooters[i]->getX() << " ";
+//              cout << earthDestroyersShooters[i]->getY() << "\n";
+//     }
         
-        
-        for(int i = 0; i < this->earthDestroyers.size();i++){
+       for(int i = this->earthDestroyers.size()-1; i >= 0 ;i--){
+
             if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyers[i]))){
                         this->gamer->setScore(earthDestroyers[i]->getScore());
                         earthDestroyers[i]->setType('F');
+             
                              //earthDestroyers.erase(earthDestroyers.begin()+i);
                             //alsoDeleteBullets
                          player_bullets.erase(player_bullets.begin() + j);
                  break;
             }
             }
+     }
         
-    }
+    
+       
+    
     
     for(int j = 0; j < this->bullets.size();j++) {
         for(int b = 0; b < this->barriers.size();b++){
@@ -230,13 +329,15 @@ void gameEngine::collision(){
         
         if(isBulletInTheArea(*(this->bullets[j]), *(this->gamer))){            
                 this->gamer->wasHit();
-                bullets.erase(bullets.begin() + j);                    
+                bullets.erase(bullets.begin() + j);
             }
             //even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
         
     }
     
 }
+
+
 
 std::vector<bullet*> gameEngine::getPlayerBullets(){
      return this->player_bullets;     
@@ -294,7 +395,7 @@ void gameEngine::moveBullets(){
                         bullets.erase(bullets.begin()+j);
                     }
                     else{
-                        bullets[j]->setPosition(bullets[j]->getY() + 10);
+                        bullets[j]->setPosition(bullets[j]->getY() + 1);
                     }
     }
     
@@ -303,7 +404,7 @@ void gameEngine::moveBullets(){
                         player_bullets.erase(player_bullets.begin()+j);
                     }
                     else{
-                    player_bullets[j]->setPosition(player_bullets[j]->getY() - 10);
+                    player_bullets[j]->setPosition(player_bullets[j]->getY() - 5);
                     }
     }
 }    
@@ -313,9 +414,8 @@ int gameEngine::getScreen(){
 }
 
 int gameEngine::getOption(){
-     this->readInput();//reads keyboard
-    return this->option; //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3
-    
+    this->readInput();//reads keyboard
+    return this->option; //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3    
 }
 
 void gameEngine::readInput(){
@@ -325,7 +425,6 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
 }    
 
 if(screen == 0){//Main Menu
-
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
              this->option--;
              if(option < 0)
@@ -355,11 +454,10 @@ else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
 }
 }
 
-
 if(screen < 1)
     return;
 
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){//&& this->gamer->getLives() > 0 ){
              this->pause = !pause;
 }
 
@@ -367,34 +465,35 @@ if(pause == true)
     return;//This way it wont allow the player to move
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-             this->gamer->setPosition(this->gamer->getX() - 20);
+             this->gamer->setPosition(this->gamer->getX() - 5);
 }
 
 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-            this->gamer->setPosition(this->gamer->getX() + 20);
+            this->gamer->setPosition(this->gamer->getX() + 5);
 }
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-             if(player_bullets.size()<=3){
+             if((player_bullets.size()<=3)&& shoot_state){
              player_bullets.push_back(new bullet((this->gamer->getX() + 22), this->gamer->getY()));
              this-> shootSound( );
-             }
+             shoot_state = false;
          }
+         }
+else{    
+    shoot_state = true;    
+}
 }
 
 void gameEngine::initBarriers(int posx,int posy){
     
     int bX = posx;
-    int bY = posy+10;
-    
+    int bY = posy+10;    
     int updateX,updateY;
     int pieces = 5;
     int growth = 1;
     //Barriers are generated from left to right, and down to up
-    for(int i = 0; i < 9;i++){
-        
-         for(int j = 0; j < pieces; j++){
-             
+    for(int i = 0; i < 9;i++){        
+         for(int j = 0; j < pieces; j++){             
              updateX = bX+(i*10);
              updateY = bY-(j*10);
              barriers.push_back(new barrier(updateX, updateY));
@@ -403,10 +502,8 @@ void gameEngine::initBarriers(int posx,int posy){
          if(i == pieces/2){
                 growth = -1;
          }
-         pieces = pieces+growth;
-         
-    }   
-    
+         pieces = pieces+growth;         
+    }       
 }
 
 #endif

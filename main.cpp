@@ -8,9 +8,15 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <pthread.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <chrono>
 #define MAIN_CPP
 
 using namespace std;
+
+using namespace std::chrono;
 
 int main()
 {   
@@ -20,21 +26,18 @@ int main()
     ScreenGen myGame(window);
     cout << "Loading Game...\n";
     gameEngine gameMechanics;
-    //cout << gameEngine->getInvaders().size();
-        
-    myGame.splashScreen(window);//Create a initial screen before the game, later in the project
-    
+    //cout << gameEngine->getInvaders().size();        
+    myGame.splashScreen(window);//Create a initial screen before the game    
+    //A menu to make the game more presentable, it
     while(gameMechanics.getScreen() == 0){
         myGame.MainMenu(window,gameMechanics.getOption());
-    }
-    
+    }    
 
     while (window.isOpen())
-    {    
-     
-    if(gameMechanics.exitGame()){
-        window.close();
-        return 0;        
+    {     
+        if(gameMechanics.exitGame()){
+            window.close();
+            return 0;        
     }
     
     sf::Event event;    
@@ -44,10 +47,34 @@ int main()
             window.close();
     }
     
-    gameMechanics.runGame();//This will be responsible for the entire inteligence/operation of the game, collision detection, control of invaders, shoots and so on
-    //is it possible to do the comunication in between both as a FIFO buffer?    
+    gameMechanics.runGame();
+    
+        auto start = high_resolution_clock::now();
+
+myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
+        
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds> (stop - start);
+    cout << duration.count() << endl;
+    
+    
+    
+//     auto start = high_resolution_clock::now();
+//     auto stop = high_resolution_clock::now();
+//     auto duration = duration_cast<microseconds> (stop - start);
+//     cout << duration.count() << endl;
+    
+
+    
+
+    //This will be responsible for the entire inteligence/operation of the game, collision detection, control of invaders, shoots and so on
+    //is it possible to do the comunication in between both as a FIFO buffer?
+   
     //Is the UFO one more invaders generated dynamically like bullets? Decision we should take as a group.
-    myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
+    //myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
+ 
+    
+    //sf::sleep(sf::milliseconds(100));
     //This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen    
 }
     

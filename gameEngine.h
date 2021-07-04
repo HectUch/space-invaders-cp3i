@@ -7,6 +7,9 @@
 #include "barrier.h"
 #include "invader.h"
 #include <vector>
+#include <pthread.h>
+#include <unistd.h>
+#include <stdio.h>
 #define GAMEENGINE_H
 
 class gameEngine{
@@ -20,6 +23,7 @@ public:
         std::vector<bullet*> getBullets();
         std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
+        bool getTimer();
          int initSound( );
          bool exitGame();
          int getOption();
@@ -43,10 +47,12 @@ private:
         void readInput();
         void moveBullets();
         bool isBulletInTheArea(bullet,invader);
-        void invadersCometoEarth(void);
+        //void* invadersCometoEarth(void*);
+        void invadersCometoEarth();
         void shootSound( );     
         player *gamer;
         std::vector<invader*> earthDestroyers;//11*5 Invaders
+        std::vector<invader*> earthDestroyersShooters;//ShootingInvaders
         std::vector<bullet*> player_bullets;
         std::vector<bullet*> bullets;
         std::vector<barrier*> barriers;
@@ -56,6 +62,12 @@ private:
         //Sound Effects
         sf::Sound *sound;
         sf::SoundBuffer *buffer;
+        pthread_t invaders_come_to_earth;
+        pthread_t move_bullets;
+        clock_t timeDelay_invader;
+        clock_t timeDelay_bullet;
+        bool timer;
+        bool shoot_state;
 };
 
 #endif

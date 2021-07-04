@@ -1,7 +1,7 @@
 cc = g++
 #Add new classes to this OBJS, Ex: NewClass.o
 OBJS =   player.o invader.o bullet.o  barrier.o element.o ScreenGen.o gameEngine.o main.o
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lpthread
 
 
 main :  $(OBJS) #If this is updated, it only compiles the file that was updated
