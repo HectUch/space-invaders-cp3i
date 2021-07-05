@@ -320,15 +320,13 @@ void ScreenGen::gameOver(sf::RenderWindow &window,int option){
         window.display();    
 }
 
-void ScreenGen::Animate(){
-    
+void ScreenGen::Animate(){    
     if(this->animation == 1){
         this->animation = 2;
     }
     else{
         this->animation =1;
-    }
-    
+    }    
 }
 
 void ScreenGen::playing(sf::RenderWindow &window,player gamer){              
@@ -375,7 +373,13 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
 
 void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameState){
     
-
+    if(gameState.getScreen() == 0){
+       this->MainMenu(window,gameState.getOption());
+        return;
+    }
+    
+    else if(gameState.getScreen() == 1){
+    
     window.clear();
     
     this->initPlayer(gameState.getPlayer());   
@@ -393,7 +397,12 @@ void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameStat
     else 
         isPaused(window,gameState.getPlayer());    
     
-    window.display();   
+    window.display();
+    }
+    
+    else if(gameState.getScreen() == 5){
+        this->gameOver(window,gameState.getOption());        
+    }
     //auto start = high_resolution_clock::now();
     //auto stop = high_resolution_clock::now();
     //auto duration = duration_cast<microseconds> (stop - start);
@@ -406,10 +415,13 @@ void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameStat
 void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause, bool Timer){
     
     window.clear();
-    this->initPlayer(gamer);   
+    
+    this->initPlayer(gamer);
+    
     if (Timer){
         this->Animate();   
-    }    
+    }
+    
     this->initInvaders(window,allienLoco);
     this->initBullets(window,gekBullets);
     this->initBullets(window,gekPlayerBullets);

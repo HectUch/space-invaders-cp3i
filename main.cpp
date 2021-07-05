@@ -29,9 +29,6 @@ int main()
     //cout << gameEngine->getInvaders().size();        
     myGame.splashScreen(window);//Create a initial screen before the game    
     //A menu to make the game more presentable, it
-    while(gameMechanics.getScreen() == 0){
-        myGame.MainMenu(window,gameMechanics.getOption());
-    }    
 
     while (window.isOpen())
     {     
@@ -49,24 +46,11 @@ int main()
     
     gameMechanics.runGame();
     
-    if(gameMechanics.getScreen() == 1){
-        auto start = high_resolution_clock::now();
-        
-      //  myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
-        
+       auto start = high_resolution_clock::now();
        myGame.drawGameWithEngine(window,gameMechanics); 
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds> (stop - start);
         cout << duration.count() << endl;
-    }
-    
-    if(gameMechanics.getScreen() == 5){
-        myGame.gameOver(window,gameMechanics.getOption());        
-    }
-    //     auto start = high_resolution_clock::now();
-    //     auto stop = high_resolution_clock::now();
-    //     auto duration = duration_cast<microseconds> (stop - start);
-    //     cout << duration.count() << endl;
 
     //sf::sleep(sf::milliseconds(100));
   

@@ -29,24 +29,36 @@ gameEngine::gameEngine(){
     initSound( );
     screen = 0;
     option = 0;
-    pause = false;
+   
     exit = false;
     //Game logic initialization
-   gamer = new player();
+    restartGame();
+
+}
+
+void gameEngine::restartGame(){
+    
+    exit = false;
+    //Game logic initialization
+    pause = false;
+    gamer = new player();
     level = 1;
     timeDelay_invader = 0;
     timeDelay_bullet = 0;
-
-    this->initInvaders();
-   
     
-    this->initBarriers(60,470);
-    this->initBarriers(260,470);
-    this->initBarriers(460,470);
-    this->initBarriers(660,470);      
+    this->initInvaders();
+    
+    this->player_bullets.clear();
+    this->bullets.clear();
+    
+    this->initBarriers(60,520);
+    this->initBarriers(260,520);
+    this->initBarriers(460,520);
+    this->initBarriers(660,520);      
    
    cout << earthDestroyers.size() << "\n";   
-
+ 
+    
 }
 
 void gameEngine::initInvaders(){
@@ -56,7 +68,10 @@ void gameEngine::initInvaders(){
    randomShootingTime = 20;
    lastShoot = 0;
    timesOneSide = 0;
-    
+   
+   earthDestroyers.clear();
+   earthDestroyersShooters.clear();
+   
    this->invadersDirection = 0;   
     for(int i = 0;i < 5;i++)
    {
@@ -119,9 +134,7 @@ void gameEngine::invadersShoot(){
     }
 }
 
-//void *gameEngine::invadersCometoEarth(void *arg){
-    
-    void gameEngine::invadersCometoEarth(){
+void gameEngine::invadersCometoEarth(){
     
     for(int jo = 0; jo < earthDestroyers.size(); jo++){
         if ((earthDestroyers[jo]->getX() == 760) && (this->invadersDirection == 0)){
@@ -430,8 +443,10 @@ if(screen == 0 || screen == 5){//Main Menu & Game over
                         }
                         else if(screen == 5){
                             
-                            if(option%2 == 0)
+                            if(option%2 == 0){
                                 this->screen = 1; //Screen = 1 is the game itself
+                                this->restartGame();
+                        }
                                     
                             else    if(option%2 == 1){
                                 screen = 4;

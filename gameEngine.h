@@ -28,7 +28,7 @@ public:
          int getOption();
          int getScreen();
          void initInvaders();
-
+         
 private:
         void initBarriers(int,int);
         bool isBulletInTheArea(bullet, player);
