@@ -26,7 +26,7 @@ sf::RenderWindow window(sf::VideoMode(800, 600), "Enschede Invaders");
 
 ScreenGen myGame(window);
 
-bool input[8]; //LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3, SPACE = 4, ENTER = 5, P = 6, ESC = 7 
+bool input[7]; 
 
 void* draw_the_game(void *){
     
@@ -34,47 +34,6 @@ void* draw_the_game(void *){
     
     return NULL;
     
-}
-
-void* readInput(void *){
-    
-for(int i = 0; i < 8; i++){
-    
-    input[i] = false;
-    
-}
-
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-             input[7] = true;
-}    
-
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){//&& this->gamer->getLives() > 0 ){
-             input[6] = true;
-}
-
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-             input[0] = true;
-}
-
-else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-             input[1] = true;
-}
-
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-             input[4] = true;
-}
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-             input[2] = true;
-}
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-             input[3] = true;
-}
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
-             input[5] = true;
-}
-
-return NULL;
-
 }
 
 int main()
@@ -126,19 +85,18 @@ int main()
     if(B_1){
         //cout << "poep" << "\n";
         B_1 = false;
-        pthread_create(&check_input, NULL, readInput, NULL);
+        pthread_create(&check_input, NULL, (THREADFUNCPTR) &gameEngine::readInput, &gameMechanics);
         //cout << "neen" << "\n";
-        pthread_join(check_input, NULL);
+        //pthread_join(check_input, NULL);
         //cout << "pies" << "\n";
         //myGame.drawGameWithEngine(window,gameMechanics); 
         //draw_the_game(NULL);
         //cout << "troep" << "\n";
         pthread_create(&draw_game, NULL, draw_the_game, NULL);
-
         //pthread_join(check_input, NULL);
         
         pthread_join(draw_game, NULL);
-        //pthread_join(check_input, NULL);
+        pthread_join(check_input, NULL);
         
         B_2 = true;
         B_3 = true;

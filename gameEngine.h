@@ -23,11 +23,12 @@ public:
         std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
         bool getTimer();
-         int initSound( );
-         bool exitGame();
-         int getOption();
-         int getScreen();
-         void initInvaders();
+        int initSound( );
+        bool exitGame();
+        int getOption();
+        int getScreen();
+        void initInvaders();
+        void readInput();
          
 private:
         void initBarriers(int,int);
@@ -43,7 +44,6 @@ private:
         int gameSpeed;
         int screen;
         int option;
-        void readInput();
         void moveBullets();
         bool isBulletInTheArea(bullet,invader);
         void invadersCometoEarth();
