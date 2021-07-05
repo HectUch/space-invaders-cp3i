@@ -1,6 +1,5 @@
 #ifndef GAMEENGINE_H
 #include <SFML/Audio.hpp>
-#include "ScreenGen.h"
 #include "player.h"
 #include "bullet.h"
 #include "element.h"
@@ -47,7 +46,6 @@ private:
         void readInput();
         void moveBullets();
         bool isBulletInTheArea(bullet,invader);
-        //void* invadersCometoEarth(void*);
         void invadersCometoEarth();
         void shootSound( );     
         player *gamer;

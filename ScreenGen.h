@@ -6,6 +6,7 @@
 #include "bullet.h"
 #include "barrier.h"
 #include "invader.h"
+#include "gameEngine.h"
 #include <vector>
 #define SCREENGEN_H
 
@@ -14,16 +15,22 @@ using namespace std;
 class ScreenGen{
     
 public:    
+    
     ScreenGen(sf::RenderWindow &);
     void splashScreen(sf::RenderWindow &);
+    void drawGameWithEngine(sf::RenderWindow &,gameEngine&);
     void drawGame(sf::RenderWindow &,player,std::vector<invader*>,std::vector<bullet*>, std::vector<bullet*>, std::vector<barrier*>,bool isPause, bool); 
     void reset();
     void pauseScreen();
     void MainMenu(sf::RenderWindow &,int);
+    void gameOver(sf::RenderWindow &window,int);
     void highScore();
     void AboutTheGame();
+    void levelUp(sf::RenderWindow &window,int level);    
+    
     
 private:
+    
     sf::Texture getTexture();
     void LoadText();
     void delay();
@@ -34,13 +41,13 @@ private:
     void initPlayer(player);
     void initInvaders(sf::RenderWindow &,std::vector<invader*>);    
     void initBullets(std::vector<bullet*>);    
-    void gameOver(sf::RenderWindow &window,player);
     void playing(sf::RenderWindow &window,player);
     void updateLives(sf::RenderWindow &window,player);
     void initAll();
     void Animate();
     void LoadTexture();
     void isPaused(sf::RenderWindow &window,player gamer);
+    
      sf::Texture textureExplosion;
     string scoreTextstring;     
     sf::Sprite invadersSprite;

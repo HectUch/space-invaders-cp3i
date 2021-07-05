@@ -49,35 +49,28 @@ int main()
     
     gameMechanics.runGame();
     
+    if(gameMechanics.getScreen() == 1){
         auto start = high_resolution_clock::now();
-
-myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
         
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds> (stop - start);
-    cout << duration.count() << endl;
+      //  myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
+        
+       myGame.drawGameWithEngine(window,gameMechanics); 
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds> (stop - start);
+        cout << duration.count() << endl;
+    }
     
-    
-    
-//     auto start = high_resolution_clock::now();
-//     auto stop = high_resolution_clock::now();
-//     auto duration = duration_cast<microseconds> (stop - start);
-//     cout << duration.count() << endl;
-    
+    if(gameMechanics.getScreen() == 5){
+        myGame.gameOver(window,gameMechanics.getOption());        
+    }
+    //     auto start = high_resolution_clock::now();
+    //     auto stop = high_resolution_clock::now();
+    //     auto duration = duration_cast<microseconds> (stop - start);
+    //     cout << duration.count() << endl;
 
-    
-
-    //This will be responsible for the entire inteligence/operation of the game, collision detection, control of invaders, shoots and so on
-    //is it possible to do the comunication in between both as a FIFO buffer?
-   
-    //Is the UFO one more invaders generated dynamically like bullets? Decision we should take as a group.
-    //myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
- 
-    
     //sf::sleep(sf::milliseconds(100));
-    //This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen    
-}
-    
+  
+}    
     return 0;
 }
 

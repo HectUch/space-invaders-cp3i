@@ -1,6 +1,8 @@
 #ifndef GAMEENGINE_H
 #include <SFML/Audio.hpp>
-#include "ScreenGen.h"
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <string>
 #include "element.h"
 #include "player.h"
 #include "bullet.h"
@@ -17,6 +19,7 @@
 #define GAMEENGINE_H
 
 using namespace std::chrono;
+using namespace std;
 
 gameEngine::gameEngine(){
     
@@ -69,10 +72,9 @@ void gameEngine::initInvaders(){
             earthDestroyers.push_back(alien); 
             
             if(i == 4)
-                earthDestroyersShooters.push_back(alien);     
+                earthDestroyersShooters.push_back(alien);    
             
-            cout << invaderX << " " << invaderY <<  " " << tipo << "\n";
-            
+            cout << invaderX << " " << invaderY <<  " " << tipo << "\n";         
             
         }
    } 
@@ -110,8 +112,7 @@ void gameEngine::invadersShoot(){
         bullet *invaderBullet = new bullet((earthDestroyersShooters[rand()%11]->getX() + 11), (earthDestroyersShooters[rand()%11]->getY()+11));
         invaderBullet->shootByInvader();
         bullets.push_back(invaderBullet);
-        //cout <<  invader << "\n";
-        
+        //cout <<  invader << "\n";        
     }
     else{
         lastShoot++;   
@@ -148,27 +149,6 @@ void gameEngine::invadersShoot(){
         for(int i =0;i < earthDestroyers.size(); i++ )
             this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());   
         } 
-            //if(this->timesOneSide >= 33){ 
-                //for(int i =0;i < earthDestroyers.size(); i++ ){
-                    //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f); 
-                //}
-                //this->invadersDirection = 1;
-                //this->timesOneSide = 0;               
-            //}
-                
-            //for(int i =0;i < earthDestroyers.size(); i++ ){
-                //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());
-            //}           
-            //if(this->timesOneSide == 33){ 
-                //for(int i =0;i < earthDestroyers.size(); i++ )
-                    //this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX(),this->earthDestroyers[i]->getY()+10.f);   
-               
-                //this->invadersDirection = 0;
-                //this->timesOneSide = 0;                 
-            //}
-    //this->timesOneSide++;
-    
-    ////return NULL;
 
 }
 void gameEngine::runGame(){
@@ -179,6 +159,7 @@ void gameEngine::runGame(){
     
     this->readInput();//reads keyboard and updates player position    
     
+   
      if(this->pause == true){
         return;
     } 
@@ -219,15 +200,17 @@ void gameEngine::runGame(){
      //Collision Detection
      
     //Random creation of UFO
+     if(this->gamer->getLives() == 0){
+         screen = 5;
+         pause = true;
+     }
      if(earthDestroyers.size() == 0){
          this->initInvaders();
          level++;         
      }
      
-     //auto stop = high_resolution_clock::now();
-     
-     //auto duration = duration_cast<microseconds> (stop - start);
-     
+     //auto stop = high_resolution_clock::now();     
+     //auto duration = duration_cast<microseconds> (stop - start);     
      //cout << duration.count() << endl;
 }
 
@@ -276,9 +259,8 @@ void gameEngine::collision(){
                         //alsoDeleteBullets
                         player_bullets.erase(player_bullets.begin()+j);
                  break;                
-               }
-        }
-        
+            }
+    }        
     
     for(int i = 0; i < this->earthDestroyersShooters.size();i++){
             if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyersShooters[i]))){
@@ -293,10 +275,6 @@ void gameEngine::collision(){
             }
     }
     
-//     for(int i = 0; i < earthDestroyersShooters.size(); i++){
-//             cout << earthDestroyersShooters[i]->getX() << " ";
-//              cout << earthDestroyersShooters[i]->getY() << "\n";
-//     }
         
        for(int i = this->earthDestroyers.size()-1; i >= 0 ;i--){
 
@@ -310,10 +288,7 @@ void gameEngine::collision(){
                  break;
             }
             }
-     }
-        
-    
-       
+     }     
     
     
     for(int j = 0; j < this->bullets.size();j++) {
@@ -331,13 +306,10 @@ void gameEngine::collision(){
                 this->gamer->wasHit();
                 bullets.erase(bullets.begin() + j);
             }
-            //even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.
-        
+            //even if the bullet doesnt kill the bullet , it can not go to the check routine for the invaders, as it will kill them.        
     }
     
 }
-
-
 
 std::vector<bullet*> gameEngine::getPlayerBullets(){
      return this->player_bullets;     
@@ -352,7 +324,7 @@ bool gameEngine::isBulletInTheArea(bullet balas, barrier elBadBoys){
     float y = balas.getY() - elBadBoys.getY();
     float distance = sqrt(x*x+y*y);
         
-    if(distance <= 5.f)
+    if(distance <= 5.5f)
         return true;
     else
         return false;
@@ -410,7 +382,7 @@ void gameEngine::moveBullets(){
 }    
 
 int gameEngine::getScreen(){    
-    return this->screen;  //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3    
+    return this->screen;  //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3,gameOver  = 5   
 }
 
 int gameEngine::getOption(){
@@ -424,34 +396,49 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
              this->exit = !exit;
 }    
 
-if(screen == 0){//Main Menu
-if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-             this->option--;
-             if(option < 0)
-                 option = 4;
-}
+if(screen == 0 || screen == 5){//Main Menu & Game over
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                this->option--;
+                if(option < 0)
+                    option = 4;
+    }
 
-else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-             this->option++;
-             if(option > 4)
-                 option = 0;
-}
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                this->option++;
+                if(option > 4)
+                    option = 0;
+    }
 
-else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
-            //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3
-            if(option == 0)
-                    this->screen++; //Screen = 1 is the game itself
-            else    if(option == 1){
-                //HighScore implementation
-            }
-            else    if(option == 3){
-                //Creators Faces?
-            }
-            else {
-                screen = 4;
-                this->exit = !exit;
-            }     
-}
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
+        
+                if(screen == 0){
+                //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3
+                        if(option == 0)
+                                this->screen++; //Screen = 1 is the game itself
+                                
+                        else    if(option == 1){
+                            //HighScore implementation
+                        }
+                        else    if(option == 3){
+                            //Creators Faces?
+                        }
+                        else {
+                            screen = 4;
+                            this->exit = !exit;
+                        }
+                        
+                        }
+                        else if(screen == 5){
+                            
+                            if(option%2 == 0)
+                                this->screen = 1; //Screen = 1 is the game itself
+                                    
+                            else    if(option%2 == 1){
+                                screen = 4;
+                                this->exit = !exit;               
+                        }
+                }
+    }
 }
 
 if(screen < 1)
