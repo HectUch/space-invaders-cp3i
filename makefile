@@ -13,8 +13,8 @@ element.o : element.h
 player.o : player.h
 invader.o : invader.h
 bullet.o : bullet.h
-gameEngine.o : gameEngine.h 
-ScreenGen.o:  ScreenGen.h gameEngine.h
+gameEngine.o : gameEngine.h
+ScreenGen.o:  ScreenGen.h
 main.o : ScreenGen.h	player.h
 
 #These rules bellow are implicit in the rules above

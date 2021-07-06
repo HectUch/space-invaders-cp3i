@@ -1,5 +1,6 @@
 #ifndef GAMEENGINE_H
 #include <SFML/Audio.hpp>
+#include "ScreenGen.h"
 #include "player.h"
 #include "bullet.h"
 #include "element.h"
@@ -23,15 +24,15 @@ public:
         std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
         bool getTimer();
-        int initSound( );
-        bool exitGame();
-        int getOption();
-        int getScreen();
-        void initInvaders();
-        void readInput();
-         
+         int initSound( );
+         bool exitGame();
+         int getOption();
+         int getScreen();
+         void initInvaders();
+
 private:
         void initBarriers(int,int);
+        
         bool isBulletInTheArea(bullet, player);
         bool isBulletInTheArea(bullet, barrier);
         void collision();
@@ -44,10 +45,13 @@ private:
         int gameSpeed;
         int screen;
         int option;
+        void readInput();
         void moveBullets();
         bool isBulletInTheArea(bullet,invader);
+        //void* invadersCometoEarth(void*);
         void invadersCometoEarth();
-        void shootSound( );     
+        void shootSound( );
+        void *ExecuteInvaders(void *);
         player *gamer;
         std::vector<invader*> earthDestroyers;//11*5 Invaders
         std::vector<invader*> earthDestroyersShooters;//ShootingInvaders
@@ -62,6 +66,7 @@ private:
         sf::SoundBuffer *buffer;
         pthread_t invaders_come_to_earth;
         pthread_t move_bullets;
+        pthread_t check_input;
         clock_t timeDelay_invader;
         clock_t timeDelay_bullet;
         bool timer;

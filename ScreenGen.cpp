@@ -5,7 +5,6 @@
 #include "bullet.h"
 #include "barrier.h"
 #include "invader.h"
-#include "gameEngine.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -78,7 +77,6 @@ void ScreenGen::initAll(){
 void ScreenGen::MainMenu(sf::RenderWindow &window,int option){
             
             float optie = option + 0.0f;
-
             window.clear();
             textBoxAux.setFont(font);
             textBoxAux.setString("Enschede Invaders ");
@@ -246,7 +244,7 @@ void ScreenGen::LoadText(){
     if(!font.loadFromFile("fonts/space_invaders.ttf")){
         //Error...
     }
-    
+
     scoreText.setFont(font);
     scoreText.setString("Score : < 0 >");
     scoreText.setCharacterSize(15);
@@ -255,102 +253,91 @@ void ScreenGen::LoadText(){
 
 }
 
-void ScreenGen::levelUp(sf::RenderWindow &window,int level){
-    
-        textBoxAux.setFont(font);
-        textBoxAux.setString("LEVEL");
-        textBoxAux.setCharacterSize(35);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(300.f,250.f);    
-    
-        window.draw(scoreText);
-        window.draw(textBoxAux);
-            
-        textBoxAux.setFont(font);
-        textBoxAux.setString("< " + to_string(level) + " >" );
-        textBoxAux.setCharacterSize(25);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(335.f,300.f);
-        window.draw(textBoxAux);
-    
-}
-
-void ScreenGen::gameOver(sf::RenderWindow &window,int option){
-    
-        window.clear();  
-    
+void ScreenGen::gameOver(sf::RenderWindow &window,player gamer){
+      
+       /*     
         if(option%2 == 0){
                 this->initSprites(invadersSprite,'C');   
-                this->invadersSprite.setPosition(290.f,300.f);
+                this->invadersSprite.setPosition(250.f,270.f);
                 window.draw(invadersSprite);
-                this->invadersSprite.setPosition(470.f,300.f);
+                this->invadersSprite.setPosition(470.f,270.f);
                 window.draw(invadersSprite);            
-        }
-        else if(option%2 == 1){
+            }
+            else if(option%2 == 1){
                 this->initSprites(invadersSprite,'C');   
-                this->invadersSprite.setPosition(290.f,330.f);
+                this->invadersSprite.setPosition(250.f,310.f);
                 window.draw(invadersSprite);
-                this->invadersSprite.setPosition(475.f,330.f);
+                this->invadersSprite.setPosition(470.f,310.f);
                 window.draw(invadersSprite);
-        }
-            
-        textBoxAux.setFont(font);
-        textBoxAux.setString("GAME OVER");
-        textBoxAux.setCharacterSize(35);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(300.f,250.f);    
+            }
+            */
+            textBoxAux.setFont(font);
+            textBoxAux.setString("GAME OVER");
+            textBoxAux.setCharacterSize(35);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(300.f,250.f);    
     
-        window.draw(scoreText);
-        window.draw(textBoxAux);
+            window.draw(playerSprite);
+            updateLives(window,gamer);         
+            window.draw(scoreText);
+            window.draw(textBoxAux);
             
-        textBoxAux.setFont(font);
-        textBoxAux.setString("RESTART");
-        textBoxAux.setCharacterSize(25);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(335.f,300.f);
-        window.draw(textBoxAux);
-             
-        textBoxAux.setFont(font);
-        textBoxAux.setString("QUIT GAME");
-        textBoxAux.setCharacterSize(25);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(325.f,330.f);
+            textBoxAux.setFont(font);
+            textBoxAux.setString("RESTART");
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(350.f,300.f);
+            
+            textBoxAux.setFont(font);
+            textBoxAux.setString("QUIT GAME");
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(350.f,300.f);
     
-        window.draw(textBoxAux);  
-        window.display();    
+            window.draw(textBoxAux);  
+    
 }
 
-void ScreenGen::Animate(){    
+void ScreenGen::Animate(){
+    
     if(this->animation == 1){
         this->animation = 2;
     }
     else{
         this->animation =1;
-    }    
+    }
+    
 }
 
-void ScreenGen::playing(sf::RenderWindow &window,player gamer){              
+void ScreenGen::playing(sf::RenderWindow &window,player gamer){      
+        
         window.draw(playerSprite);
         updateLives(window,gamer);         
         window.draw(scoreText);
         window.draw(shipsText);               
+        //gamer.wasHit(); // Automated Testing
 }
 
 sf::Texture ScreenGen::getTexture(){
     return this->texture;
 }
 
-void ScreenGen::initBullets(sf::RenderWindow &window, std::vector<bullet*> bulletss1){    
-        for(int n = 0; n < bulletss1.size(); n++){
-               sf::Sprite bulletsSprite;
-               this->initSprites(bulletsSprite,'Q');
-               bulletsSprite.setPosition(bulletss1[n]->getX(),bulletss1[n]->getY());
-               bulletsSprite.setColor(sf::Color(255,0, 255)); // Rood./
-               window.draw(bulletsSprite);
-        }  
+void ScreenGen::initBullets(sf::RenderWindow &window, std::vector<bullet*> bulletss1){
+    
+for(int n = 0; n < bulletss1.size(); n++){
+            sf::Sprite bulletsSprite;
+            //this->LoadTexture();
+            this->initSprites(bulletsSprite,'Q');
+            //bulletsprite1.setTextureRect(this->catchTextureByType('C',2));//Crab2
+            bulletsSprite.setPosition(bulletss1[n]->getX(),bulletss1[n]->getY());
+            bulletsSprite.setColor(sf::Color(255,0, 255)); // Rood./
+            //bulletsprite1.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
+            window.draw(bulletsSprite);
+}  
 }
 
-void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> barrierss){    
+void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> barrierss){
+    
     for(int l = 0; l < barrierss.size(); l++){
               sf::RectangleShape rectangle(sf::Vector2f(10.f, 10.f));
               rectangle.setPosition(barrierss[l]->getX(),barrierss[l]->getY());
@@ -359,7 +346,8 @@ void ScreenGen::initBarriers(sf::RenderWindow &window, std::vector<barrier*> bar
     }           
 }
 
-void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){    
+void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
+    
     textBoxAux.setFont(font);
     textBoxAux.setString("PAUSED");
     textBoxAux.setCharacterSize(35);
@@ -368,82 +356,74 @@ void ScreenGen::isPaused(sf::RenderWindow &window,player gamer){
     window.draw(scoreText);
     window.draw(textBoxAux);
     window.draw(playerSprite);
-    updateLives(window,gamer);   
-}
-
-void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameState){
-    
-    if(gameState.getScreen() == 0){
-       this->MainMenu(window,gameState.getOption());
-        return;
-    }
-    
-    else if(gameState.getScreen() == 1){
-    
-    window.clear();
-    
-    this->initPlayer(gameState.getPlayer());   
-    if (gameState.getTimer()){
-        this->Animate();   
-    }    
-    this->initInvaders(window,gameState.getInvaders());
-    this->initBullets(window,gameState.getBullets());
-    this->initBullets(window,gameState.getPlayerBullets());
-    this->initBarriers(window,gameState.getBarriers());
-    this->updateLives(window,gameState.getPlayer());
-
-     if(!(gameState.paused()))
-        playing(window,gameState.getPlayer());
-    else 
-        isPaused(window,gameState.getPlayer());    
-    
-    window.display();
-    }
-    
-    else if(gameState.getScreen() == 5){
-        this->gameOver(window,gameState.getOption());        
-    }
-    //auto start = high_resolution_clock::now();
-    //auto stop = high_resolution_clock::now();
-    //auto duration = duration_cast<microseconds> (stop - start);
-    //cout << duration.count() << endl;
-    //this->delay();
-   //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
+    updateLives(window,gamer);    
     
 }
 
 void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invader*> allienLoco, std::vector<bullet*> gekBullets, std::vector<bullet*> gekPlayerBullets, std::vector<barrier*> gekBarriers, bool isPause, bool Timer){
     
     window.clear();
+        
+            //this->initAll();
+    this->initPlayer(gamer);  
     
-    this->initPlayer(gamer);
-    
+    //cout << this->animation;
     if (Timer){
-        this->Animate();   
+     this->Animate();   
     }
     
     this->initInvaders(window,allienLoco);
+            
     this->initBullets(window,gekBullets);
+                
     this->initBullets(window,gekPlayerBullets);
+                    
     this->initBarriers(window,gekBarriers);
-    this->updateLives(window,gamer);
 
-     if(!isPause)
-        playing(window,gamer);
-    else 
-        isPaused(window,gamer);    
+    this->updateLives(window,gamer);
+                                
+    if(gamer.getLives() == 0) 
+        this->gameOver(window,gamer);
+    else{
+        if(!isPause)
+            playing(window,gamer);
+        else 
+            isPaused(window,gamer);
+    }
     
     window.display();   
-    //auto start = high_resolution_clock::now();
-    //auto stop = high_resolution_clock::now();
-    //auto duration = duration_cast<microseconds> (stop - start);
-    //cout << duration.count() << endl;
-    //this->delay();
-   //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
-}   
+
+                        
+
     
-void ScreenGen::delay(){
-    sf::sleep(delayTime);
-}
+
+    
+    //auto start = high_resolution_clock::now();
+    
+
+
+    
+    //auto stop = high_resolution_clock::now();
+
+
+    
+    
+    
+    
+
+    
+    
+    
+    //auto duration = duration_cast<microseconds> (stop - start);
+    
+    //cout << duration.count() << endl;
+
+    //this->delay();
+    //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
+    }   
+    
+    void ScreenGen::delay(){
+            sf::sleep(delayTime);
+    }
 
 #endif
