@@ -1,5 +1,6 @@
 #ifndef GAMEENGINE_H
 #include <SFML/Audio.hpp>
+#include <string>
 #include "player.h"
 #include "bullet.h"
 #include "element.h"
@@ -10,6 +11,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #define GAMEENGINE_H
+
+using namespace std;
 
 class gameEngine{
 public:
@@ -23,15 +26,19 @@ public:
         std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
         bool getTimer();
-        int initSound( );
-        bool exitGame();
-        int getOption();
-        int getScreen();
-        void initInvaders();
-        void readInput();
+         int initSound( );
+         bool exitGame();
+         int getOption();
+         int getScreen();
+         void initInvaders();
+         void writeScore(std::string score);
+         void fetchScore();
+         string getPosScore(int);
          
 private:
+        void checkLevelStatus();
         void initBarriers(int,int);
+        string getScore(int);
         bool isBulletInTheArea(bullet, player);
         bool isBulletInTheArea(bullet, barrier);
         void collision();
@@ -44,6 +51,7 @@ private:
         int gameSpeed;
         int screen;
         int option;
+        void readInput();
         void moveBullets();
         bool isBulletInTheArea(bullet,invader);
         void invadersCometoEarth();
@@ -66,6 +74,8 @@ private:
         clock_t timeDelay_bullet;
         bool timer;
         bool shoot_state;
+        int scoreFirst,scoreSecond,scoreThird;
+        string pScoreFirst,pScoreSecond,pScoreThird;
 };
 
 #endif

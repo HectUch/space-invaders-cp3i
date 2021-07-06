@@ -24,10 +24,9 @@ public:
     void pauseScreen();
     void MainMenu(sf::RenderWindow &,int);
     void gameOver(sf::RenderWindow &window,int);
-    void highScore();
+    void highScore(sf::RenderWindow &window,string first,string second, string third);
     void AboutTheGame();
     void levelUp(sf::RenderWindow &window,int level);    
-    
     
 private:
     

@@ -171,10 +171,10 @@ void ScreenGen::initSprites(sf::Sprite &sprite,char type){
         //sprite.setScale(sf::Vector2f(2, 2));
         return;        
     }      
-   sprite.setTexture(texture);   
-   sprite.setTextureRect(this->catchTextureByType(type,this->animation));
-   sprite.setColor(sf::Color(0,255, 0)); // Rood./
-   sprite.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
+        sprite.setTexture(texture);   
+        sprite.setTextureRect(this->catchTextureByType(type,this->animation));
+        sprite.setColor(sf::Color(0,255, 0)); // Rood./
+        sprite.setScale(sf::Vector2f(0.3f, 0.3f)); // absolute scale factor
 }
 
 sf::IntRect ScreenGen::catchTextureByType(char type,int animation){
@@ -272,7 +272,51 @@ void ScreenGen::levelUp(sf::RenderWindow &window,int level){
         textBoxAux.setFillColor(sf::Color::White);
         textBoxAux.setPosition(335.f,300.f);
         window.draw(textBoxAux);
+        
+}
+
+void ScreenGen::highScore(sf::RenderWindow &window,string first,string second, string third){
+        window.clear();  
+                
+        textBoxAux.setFont(font);
+        textBoxAux.setString("HIGH SCORES");
+        textBoxAux.setCharacterSize(35);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(300.f,250.f);    
     
+        window.draw(textBoxAux);
+            
+        textBoxAux.setFont(font);
+        textBoxAux.setString(first);
+        textBoxAux.setCharacterSize(25);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(335.f,300.f);
+        window.draw(textBoxAux);
+             
+        textBoxAux.setFont(font);
+        textBoxAux.setString(second);
+        textBoxAux.setCharacterSize(25);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(335.f,330.f);
+    
+        window.draw(textBoxAux);      
+    
+        textBoxAux.setFont(font);
+        textBoxAux.setString(third);
+        textBoxAux.setCharacterSize(25);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(335.f,360.f);
+    
+        window.draw(textBoxAux);
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("PRESS ENTER TO GO BACK");
+        textBoxAux.setCharacterSize(10);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(330.f,420.f);
+    
+        window.draw(textBoxAux);  
+        window.display();    
 }
 
 void ScreenGen::gameOver(sf::RenderWindow &window,int option){
@@ -380,26 +424,28 @@ void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameStat
     
     else if(gameState.getScreen() == 1){
     
-    window.clear();
-    
-    this->initPlayer(gameState.getPlayer());   
-    if (gameState.getTimer()){
-        this->Animate();   
-    }    
-    this->initInvaders(window,gameState.getInvaders());
-    this->initBullets(window,gameState.getBullets());
-    this->initBullets(window,gameState.getPlayerBullets());
-    this->initBarriers(window,gameState.getBarriers());
-    this->updateLives(window,gameState.getPlayer());
+        window.clear();
+        
+        this->initPlayer(gameState.getPlayer());   
+        if (gameState.getTimer()){
+            this->Animate();   
+        }    
+        this->initInvaders(window,gameState.getInvaders());
+        this->initBullets(window,gameState.getBullets());
+        this->initBullets(window,gameState.getPlayerBullets());
+        this->initBarriers(window,gameState.getBarriers());
+        this->updateLives(window,gameState.getPlayer());
 
-     if(!(gameState.paused()))
-        playing(window,gameState.getPlayer());
-    else 
-        isPaused(window,gameState.getPlayer());    
-    
-    window.display();
+        if(!(gameState.paused()))
+            playing(window,gameState.getPlayer());
+        else 
+            isPaused(window,gameState.getPlayer());    
+        
+        window.display();
     }
-    
+    else if(gameState.getScreen() == 2){
+              this->highScore(window,gameState.getPosScore(1),gameState.getPosScore(2),gameState.getPosScore(3)); 
+     }    
     else if(gameState.getScreen() == 5){
         this->gameOver(window,gameState.getOption());        
     }
