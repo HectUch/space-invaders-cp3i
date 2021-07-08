@@ -74,6 +74,7 @@ private:
         clock_t timeDelay_bullet;
         bool timer;
         bool shoot_state;
+        bool paused_state;
         int scoreFirst,scoreSecond,scoreThird;
         string pScoreFirst,pScoreSecond,pScoreThird;
 };

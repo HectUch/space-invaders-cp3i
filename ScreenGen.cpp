@@ -427,6 +427,7 @@ void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameStat
         window.clear();
         
         this->initPlayer(gameState.getPlayer());   
+        
         if (gameState.getTimer()){
             this->Animate();   
         }    

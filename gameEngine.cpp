@@ -29,8 +29,10 @@ gameEngine::gameEngine(){
     sound = new sf::Sound();
     buffer = new sf::SoundBuffer();    
     initSound( );
-    screen = 0;
+    screen = 1;
     option = 0;
+    
+    paused_state = true;
    
     exit = false;
     //Game logic initialization
@@ -260,7 +262,7 @@ void gameEngine::runGame(){
      //Collision Detection
      
     //Random creation of UFO
-    this->checkLevelStatus();
+    //this->checkLevelStatus();
 
 
 }
@@ -517,7 +519,13 @@ if(screen < 1)
     return;
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){//&& this->gamer->getLives() > 0 ){
-             this->pause = !pause;
+            if (paused_state){
+                this->pause = !pause;
+                paused_state = false;
+            }
+            else{
+                paused_state = true;
+            }
 }
 
 if(pause == true)
