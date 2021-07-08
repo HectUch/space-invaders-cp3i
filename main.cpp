@@ -21,21 +21,19 @@ using namespace std::chrono;
 
 int main()
 {   
-    
-    
+
     cout << "Generating Screen\n";
     sf::RenderWindow window(sf::VideoMode(800, 600), "Enschede Invaders");  //For now , this have to be generate a 800x600, there is no automated way to re-scale screen  
     ScreenGen myGame(window);
     cout << "Loading Game...\n";
-    gameEngine gameMechanics;
-        
+    gameEngine gameMechanics;        
     myGame.splashScreen(window);//Create a initial screen before the game    
     //A menu to make the game more presentable, it
     
     //Threads creation
     pthread_t run_game;
     pthread_t draw_game;
-    
+  
     while (window.isOpen())
     {     
         

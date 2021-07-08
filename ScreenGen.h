@@ -26,7 +26,9 @@ public:
     void gameOver(sf::RenderWindow &window,int);
     void highScore(sf::RenderWindow &window,string first,string second, string third);
     void AboutTheGame();
-    void levelUp(sf::RenderWindow &window,int level);    
+    void levelUp(sf::RenderWindow &window,int level);
+    void aboutTheGame(sf::RenderWindow &);
+    void yourScore(sf::RenderWindow &,string, int);
     
 private:
     
@@ -46,6 +48,7 @@ private:
     void Animate();
     void LoadTexture();
     void isPaused(sf::RenderWindow &window,player gamer);
+    void  initUFO(sf::RenderWindow &, invader);
     
      sf::Texture textureExplosion;
     string scoreTextstring;     
@@ -57,6 +60,7 @@ private:
     sf::Sprite ufoSprite;
     sf::Sprite blockSprite;
     sf::Texture texture;
+    sf::Texture htexture,atexture,rtexture;
     sf::Texture textureAll;
     sf::Texture texturePlayer;
     sf::Texture textureProjectile;

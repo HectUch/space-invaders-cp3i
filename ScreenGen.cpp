@@ -20,7 +20,7 @@ using namespace std::chrono;
 ScreenGen::ScreenGen(sf::RenderWindow &window){    
         animation = 1;
         this->LoadText();   
-        this->initAll();
+        //this->initAll();
         menu = 1;
 }
 
@@ -34,13 +34,26 @@ void ScreenGen::initPlayer(player elPapitoSavior){
     scoreText.setString(scoreTextstring);     
 }
 
-void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){    
+void  ScreenGen::initUFO(sf::RenderWindow &window, invader UFO){
+    
+        this->initSprites(invadersSprite,UFO.getType());   
+        this->invadersSprite.setPosition(UFO.getX(),UFO.getY());
+        if(animation == 1){
+            invadersSprite.setColor(sf::Color(255,255, 255));
+        }
+        else{
+            invadersSprite.setColor(sf::Color(255,0, 0));
+        }
+        window.draw(invadersSprite);
+        
+}
+
+void ScreenGen::initInvaders(sf::RenderWindow &window,std::vector<invader*> EarthDestroyers){
     
     for(int i =0;i < EarthDestroyers.size(); i++ ){
-       //if(!EarthDestroyers[i]->isAlive()){
+        //if(!EarthDestroyers[i]->isAlive()){
             //continue;
-        //}
-        
+        //}        
         this->initSprites(invadersSprite,EarthDestroyers[i]->getType());   
         this->invadersSprite.setPosition(EarthDestroyers[i]->getX(),EarthDestroyers[i]->getY());    
         window.draw(invadersSprite);
@@ -53,11 +66,12 @@ void ScreenGen::initAll(){
     this->initSprites(lifeSprite,'P');   
 }
 
-  void ScreenGen::splashScreen(sf::RenderWindow &window){
+void ScreenGen::splashScreen(sf::RenderWindow &window){
       int color = 255;
+      
       window.clear();
       cout << "I am here\n";
-      for(int i = 0; i < 50; i++){
+      for(int i = 0; i < 10; i++){
            
             textBoxAux.setFont(font);
             textBoxAux.setString("The C++ Jongens  Presents : ");
@@ -70,9 +84,10 @@ void ScreenGen::initAll(){
 
         window.display();  
         this->delay();
+        
        
       }
-      
+      this->initAll();      
   }
   
 void ScreenGen::MainMenu(sf::RenderWindow &window,int option){
@@ -204,7 +219,8 @@ void ScreenGen::updateLives(sf::RenderWindow &window,player gamer){
     shipsText.setString("Ships : ");
     shipsText.setCharacterSize(15);
     shipsText.setFillColor(sf::Color::White);
-    shipsText.setPosition(630.f,12.f);     
+    shipsText.setPosition(630.f,12.f); 
+
     if(gamer.getLives() == 0)return; 
     
     else{
@@ -238,15 +254,29 @@ void ScreenGen::LoadTexture(){
     if (!textureProjectile.loadFromFile("images/projectile.png"))
     {
     // error...
-    }    
+    }
+    if (!htexture.loadFromFile("images/hector.jpg"))
+    {
+        // error...
+            cout << "Could not load texture/n";
+    }
+    if (!atexture.loadFromFile("images/alain.jpg"))
+    {
+        // error...
+            cout << "Could not load texture/n";
+    }
+    if (!rtexture.loadFromFile("images/remm1.png"))
+    {
+        // error...
+            cout << "Could not load texture/n";
+    }  
 }
 
 void ScreenGen::LoadText(){
  
     if(!font.loadFromFile("fonts/space_invaders.ttf")){
         //Error...
-    }
-    
+    }    
     scoreText.setFont(font);
     scoreText.setString("Score : < 0 >");
     scoreText.setCharacterSize(15);
@@ -255,27 +285,92 @@ void ScreenGen::LoadText(){
 
 }
 
-void ScreenGen::levelUp(sf::RenderWindow &window,int level){
-    
-        textBoxAux.setFont(font);
-        textBoxAux.setString("LEVEL");
-        textBoxAux.setCharacterSize(35);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(300.f,250.f);    
-    
-        window.draw(scoreText);
-        window.draw(textBoxAux);
+void ScreenGen::yourScore(sf::RenderWindow &window,string first, int score){        
+        
             
-        textBoxAux.setFont(font);
-        textBoxAux.setString("< " + to_string(level) + " >" );
-        textBoxAux.setCharacterSize(25);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(335.f,300.f);
-        window.draw(textBoxAux);
+            textBoxAux.setFont(font);
+            textBoxAux.setString("Type your Score ( Use Up or Down) : " );
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(100.f,180.f);             
+            window.draw(textBoxAux);
+            
+            textBoxAux.setFont(font);
+            textBoxAux.setString(first  + " : " + to_string(score));
+            textBoxAux.setCharacterSize(20);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(200.f,220.f);             
+            window.draw(textBoxAux);   
+            
+}
+
+void ScreenGen::levelUp(sf::RenderWindow &window,int level){
+        
+        
+            window.clear();
+            textBoxAux.setFont(font);
+            textBoxAux.setString("LEVEL " + to_string(level)  );
+            textBoxAux.setCharacterSize(35);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(300.f,180.f);             
+            window.draw(textBoxAux);
+            
+ 
+                this->initSprites(invadersSprite,'A');   
+                this->invadersSprite.setPosition(300.f,270.f);
+                window.draw(invadersSprite);
+       
+
+                this->initSprites(invadersSprite,'B');   
+                this->invadersSprite.setPosition(300.f,310.f);
+                window.draw(invadersSprite);
+               
+ 
+                this->initSprites(invadersSprite,'C');   
+                this->invadersSprite.setPosition(300.f,350.f);
+                window.draw(invadersSprite);
+
+
+                this->initSprites(invadersSprite,'U');   
+                this->invadersSprite.setPosition(300.f,390.f);
+                window.draw(invadersSprite);
+      
+            
+            textBoxAux.setFont(font);
+           textBoxAux.setString(" = < " + to_string(level*100) + " >" );
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(360.f,270.f);             
+            window.draw(textBoxAux);      
+            
+            textBoxAux.setFont(font);
+            textBoxAux.setString(" = < " + to_string(level*200) + " >" );
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(360.f,310.f);             
+            window.draw(textBoxAux);
+            
+            textBoxAux.setFont(font);
+            textBoxAux.setString(" = < " + to_string(level*300) + " >" );
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(360.f,350.f);             
+            window.draw(textBoxAux);
+           
+            textBoxAux.setFont(font);
+            textBoxAux.setString(" = < ? >" );
+            textBoxAux.setCharacterSize(25);
+            textBoxAux.setFillColor(sf::Color::White);
+            textBoxAux.setPosition(360.f,390.f);             
+            window.draw(textBoxAux);
+            window.display();  
+            this->Animate();       
+        
         
 }
 
 void ScreenGen::highScore(sf::RenderWindow &window,string first,string second, string third){
+    
         window.clear();  
                 
         textBoxAux.setFont(font);
@@ -364,6 +459,107 @@ void ScreenGen::gameOver(sf::RenderWindow &window,int option){
         window.display();    
 }
 
+void ScreenGen::aboutTheGame(sf::RenderWindow &window){
+    
+        window.clear();          
+        //This is us 
+        
+        sf::Sprite theBoys;
+        theBoys.setTexture(htexture);
+        theBoys.setScale(sf::Vector2f(0.03f, 0.03f));
+        theBoys.setPosition(550.f,150.f);
+        window.draw(theBoys);
+        
+        theBoys.setTexture(atexture);
+        theBoys.setScale(sf::Vector2f(0.03f, 0.03f));
+        theBoys.setPosition(550.f,300.f);
+        window.draw(theBoys);
+        
+        theBoys.setTexture(rtexture);
+        theBoys.setScale(sf::Vector2f(0.03f, 0.03f));
+        theBoys.setPosition(550.f,450.f);
+        window.draw(theBoys);
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("Heitor Uchoa");
+        textBoxAux.setCharacterSize(15);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(550.f,250.f);
+        window.draw(textBoxAux);
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("Alain Jansen");
+        textBoxAux.setCharacterSize(15);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(550.f,400.f);
+        window.draw(textBoxAux);
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("Remmelt Fopma");
+        textBoxAux.setCharacterSize(15);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(545.f,550.f);
+        window.draw(textBoxAux);
+        
+        textBoxAux.setString("ABOUT THE GAME");
+        textBoxAux.setCharacterSize(35);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(220.f,10.f);   
+        window.draw(textBoxAux);        
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("TEAM");
+        textBoxAux.setCharacterSize(25);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(535.f,100.f);
+        window.draw(textBoxAux);
+        float x = 40.f;   
+        textBoxAux.setFont(font);
+        textBoxAux.setString("CONTROLS");
+        textBoxAux.setCharacterSize(25);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,95.f);
+        window.draw(textBoxAux);
+             
+        textBoxAux.setFont(font);
+        textBoxAux.setString("LEFT ARROW : MOVE PLAYER LEFT");
+        textBoxAux.setCharacterSize(20);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,130.f+x);    
+        window.draw(textBoxAux); 
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("RIGHT ARROW : MOVE PLAYER RIGHT");
+        textBoxAux.setCharacterSize(20);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,165.f+x);    
+        window.draw(textBoxAux);  
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("SPACE BAR : SHOOT BULLETS");
+        textBoxAux.setCharacterSize(20);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,200.f+x);    
+        window.draw(textBoxAux);  
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("P : PAUSE GAME");
+        textBoxAux.setCharacterSize(20);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,235.f+x);    
+        window.draw(textBoxAux);  
+        
+        textBoxAux.setFont(font);
+        textBoxAux.setString("ESCAPE : EXIT GAME");
+        textBoxAux.setCharacterSize(20);
+        textBoxAux.setFillColor(sf::Color::White);
+        textBoxAux.setPosition(15.f,270.f+x);    
+        window.draw(textBoxAux);
+        
+        window.display();    
+        
+}
+
 void ScreenGen::Animate(){    
     if(this->animation == 1){
         this->animation = 2;
@@ -435,26 +631,31 @@ void ScreenGen::drawGameWithEngine(sf::RenderWindow &window,gameEngine &gameStat
         this->initBullets(window,gameState.getPlayerBullets());
         this->initBarriers(window,gameState.getBarriers());
         this->updateLives(window,gameState.getPlayer());
+        this->initUFO(window, gameState.getUFO());
 
         if(!(gameState.paused()))
             playing(window,gameState.getPlayer());
-        else 
+        else if(!(gameState.getPlayer().isAlive()))
+            yourScore(window,gameState.getCharPos(), gameState.getPlayer().getScore());
+        else
             isPaused(window,gameState.getPlayer());    
         
         window.display();
     }
+    else if(gameState.getScreen() == 6){
+        this->levelUp(window,gameState.getLevel());   
+        
+    }
     else if(gameState.getScreen() == 2){
               this->highScore(window,gameState.getPosScore(1),gameState.getPosScore(2),gameState.getPosScore(3)); 
+     }
+    else if(gameState.getScreen() == 3){
+              this->aboutTheGame(window); 
      }    
     else if(gameState.getScreen() == 5){
         this->gameOver(window,gameState.getOption());        
     }
-    //auto start = high_resolution_clock::now();
-    //auto stop = high_resolution_clock::now();
-    //auto duration = duration_cast<microseconds> (stop - start);
-    //cout << duration.count() << endl;
-    //this->delay();
-   //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
+
     
 }
 
@@ -480,12 +681,7 @@ void ScreenGen::drawGame(sf::RenderWindow &window,player gamer,std::vector<invad
         isPaused(window,gamer);    
     
     window.display();   
-    //auto start = high_resolution_clock::now();
-    //auto stop = high_resolution_clock::now();
-    //auto duration = duration_cast<microseconds> (stop - start);
-    //cout << duration.count() << endl;
-    //this->delay();
-   //playerSprite.move(sf::Vector2f(5.f, 5.7f)); // offset relative to the current position*/
+
 }   
     
 void ScreenGen::delay(){
