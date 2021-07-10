@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string>
 #include <chrono>
 #define MAIN_CPP
 
@@ -18,70 +19,125 @@ using namespace std;
 
 using namespace std::chrono;
 
+typedef void * (*THREADFUNCPTR)(void *);
+
+gameEngine gameMechanics; //intialize game engine
+
+sf::RenderWindow window(sf::VideoMode(800, 600), "Enschede Invaders"); //initialize window
+
+ScreenGen myGame(window); //create window
+
+bool input[8]; //LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3, SPACE = 4, ENTER = 5, P = 6, ESC = 7 
+
+void* draw_the_game(void *){ //function which the threading can use to execute the drawing of the game
+        
+    myGame.drawGameWithEngine(window,gameMechanics);
+    
+    return NULL;
+    
+}
+
+void* readInput(void *){ //function which reads the input and updates the input array accordingly
+    
+for(int i = 0; i < 8; i++){
+    
+    input[i] = false;
+    
+}
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+             input[7] = true;
+}    
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){//&& this->gamer->getLives() > 0 ){
+             input[6] = true;
+}
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+             input[0] = true;
+}
+
+else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+             input[1] = true;
+}
+
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+             input[4] = true;
+}
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+             input[2] = true;
+}
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+             input[3] = true;
+}
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
+             input[5] = true;
+}
+
+return NULL;
+
+}
+
 int main()
 {   
-    
-    cout << "Generating Screen\n";
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Enschede Invaders");  //For now , this have to be generate a 800x600, there is no automated way to re-scale screen  
-    ScreenGen myGame(window);
-    cout << "Loading Game...\n";
-    gameEngine gameMechanics;
-    //cout << gameEngine->getInvaders().size();        
-    myGame.splashScreen(window);//Create a initial screen before the game    
-    //A menu to make the game more presentable, it
-    while(gameMechanics.getScreen() == 0){
-        myGame.MainMenu(window,gameMechanics.getOption());
-    }    
 
+    cout << "Generating Screen\n";
+
+    cout << "Loading Game...\n";
+
+    myGame.splashScreen(window);//Create a initial screen before the game    
+    
+    //Threads creation
+    pthread_t draw_game;
+    
+    bool B_1 = false;//boolean to represent the token from Game Engine to Input and Draw Game
+    bool B_2 = true;//boolean to represent the token from Input to Game Engine
+    bool B_3 = true;//boolean to represent the tokenDraw Game to Game Engine
+  
     while (window.isOpen())
     {     
-        if(gameMechanics.exitGame()){
+        
+        if(gameMechanics.exitGame()){ //when the game is exited, close the window
             window.close();
             return 0;        
-    }
+        }    
     
-    sf::Event event;    
-    while (window.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            window.close();
-    }
-    
-    
-    
-    
-    
-    //auto start = high_resolution_clock::now();
-    
-    //auto stop = high_resolution_clock::now();
-    //auto duration = duration_cast<microseconds> (stop - start);
-    //cout << duration.count() << endl;
-    
-    gameMechanics.runGame();
-    
-    myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
-    
-    
-//     auto start = high_resolution_clock::now();
-//     auto stop = high_resolution_clock::now();
-//     auto duration = duration_cast<microseconds> (stop - start);
-//     cout << duration.count() << endl;
-    
+        sf::Event event;    
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed) //when the windwo is closed, close the window
+                window.close();
+        }
+        
+        if(B_2 && B_3){ //when input and draw game are finished, perform run game
 
-    
+            B_2 = false;
+            B_3 = false;
+            
+            gameMechanics.runGame(input);
+        
+            B_1 = true;
+            
+        }
+        
+        if(B_1){ //when run game is finished, perform read input and draw game
+            
+            B_1 = false;
+            
+            pthread_create(&draw_game, NULL, draw_the_game, NULL); //execute draw game in thread
+            
+            readInput(NULL); //execute read input in main thread
+            
+            pthread_join(draw_game, NULL);
+        
+            B_2 = true;
+            B_3 = true;
+            
+            
+        }
 
-    //This will be responsible for the entire inteligence/operation of the game, collision detection, control of invaders, shoots and so on
-    //is it possible to do the comunication in between both as a FIFO buffer?
-   
-    //Is the UFO one more invaders generated dynamically like bullets? Decision we should take as a group.
-    //myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused());//This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen
- 
-    
-    //sf::sleep(sf::milliseconds(100));
-    //This class does not have any inteligence, it only reads outputs from the game Engine class and prints in the screen    
+        }
+        
+        return 0;
 }
-    
-    return 0;
-}
-
 #endif

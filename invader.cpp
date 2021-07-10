@@ -22,6 +22,14 @@ invader::invader(){
    
 }
 
+void invader::recruitToWar(int score,char type){
+    
+    this->lives = 1;
+    this->score = score;
+    this->type = type;
+    
+}
+
 char invader::getType(void){
     return this->type;
 }
