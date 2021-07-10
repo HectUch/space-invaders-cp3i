@@ -33,8 +33,15 @@ std::vector<bullet*> player_bullets;
 std::vector<bullet*> bullets;
 std::vector<barrier*> barriers;
 player game_player;
+invader ufo;
 bool pause_state;
 bool timer;
+bool timing;
+
+system_clock::time_point start;
+system_clock::time_point stop;
+
+
 
 
 sf::RenderWindow window(sf::VideoMode(800, 600), "Enschede Invaders");  //For now , this have to be generate a 800x600, there is no automated way to re-scale screen
@@ -45,7 +52,11 @@ void* draw_the_game(void *){
     //cout << "26" << "\n";
     //myGame.drawGameWithEngine(window,gameMechanics);
     //myGame.drawGame(window,gameMechanics.getPlayer(),gameMechanics.getInvaders(),gameMechanics.getBullets(), gameMechanics.getPlayerBullets(), gameMechanics.getBarriers(),gameMechanics.paused(), gameMechanics.getTimer());
-    myGame.drawGame(window,game_player,earthDestroyers,bullets, player_bullets, barriers, pause_state, timer);
+    //start = high_resolution_clock::now();
+    myGame.drawGame(window,game_player,earthDestroyers,bullets, player_bullets, barriers, ufo, pause_state, timer);
+    //stop = high_resolution_clock::now();
+    //auto duration = duration_cast<microseconds> (stop - start);
+    //cout << duration.count() << endl;
     draw_game_flag = true;
     
     //cout << "27" << "\n";
@@ -93,6 +104,8 @@ int main()
     run_game_flag = false;
     draw_game_flag = false;
     
+    timing = true;
+    
     while (window.isOpen())
     {     
         
@@ -131,9 +144,14 @@ int main()
                 //cout << "31" << "\n";
                 DG_GE++;
                 //cout << "32" << "\n";
+                stop = high_resolution_clock::now();
+                auto duration = duration_cast<microseconds> (stop - start);
+                cout << duration.count() << endl;
         }
         
         if((GE_DG > 0) && DG){
+            start = high_resolution_clock::now();
+            //start = high_resolution_clock::now();
             //cout << "21" << "\n";
             --GE_DG;
             //cout << "22" << "\n";
@@ -146,7 +164,6 @@ int main()
         }
         
         if((DG_GE > 0) && GE){
-            auto start = high_resolution_clock::now();
             //cout << "1" << "\n";
             --DG_GE;
             //cout << "2" << "\n";
@@ -155,19 +172,25 @@ int main()
             run_game_flag = false;
             //cout << "4" << "\n";
             //pthread_create(&run_game, NULL, run_the_game, NULL);
+            //start = high_resolution_clock::now();
             gameMechanics.runGame();
+            //stop = high_resolution_clock::now();
+            //auto duration = duration_cast<microseconds> (stop - start);
+            //cout << duration.count() << endl;
             game_player = gameMechanics.getPlayer();
             earthDestroyers = gameMechanics.getInvaders();
             bullets = gameMechanics.getBullets();
             player_bullets = gameMechanics.getPlayerBullets();
             barriers = gameMechanics.getBarriers();
+            ufo = gameMechanics.getUFO();
             pause_state = gameMechanics.paused();
             timer = gameMechanics.getTimer();
             GE = true;
             GE_DG++;
-            auto stop = high_resolution_clock::now();
-            auto duration = duration_cast<microseconds> (stop - start);
-            cout << duration.count() << endl;
+            //start = high_resolution_clock::now();
+            //stop = high_resolution_clock::now();
+            //auto duration = duration_cast<microseconds> (stop - start);
+            //cout << duration.count() << endl;
             //cout << "5" << "\n";
         }
         

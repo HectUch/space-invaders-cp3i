@@ -20,7 +20,7 @@ bool element::isAlive(){
 
 void element::getHit(){
         this->lives = 0;
-        this->type = 'Z';
+        this->type = 'F';
 }
 
 

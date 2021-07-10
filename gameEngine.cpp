@@ -31,8 +31,6 @@ gameEngine::gameEngine(){
     initSound( );
     screen = 1;
     option = 0;
-    
-    paused_state = true;
    
     exit = false;
     //Game logic initialization
@@ -49,9 +47,18 @@ void gameEngine::restartGame(){
     level = 1;
     timeDelay_invader = 0;
     timeDelay_bullet = 0;
+    isItTimeforASurprise = 0;
+    randomShowUp = rand()%120;
+    levelUpWait = 3000;
+    levelSplashCount =0;
     
-    this->initInvaders();
+    //Initialization for the HighScore system
+    first = 'A';
+    second = 'A';
+    third = 'A';
+    letter = 0;
     
+    this->initInvaders();    
     this->player_bullets.clear();
     this->bullets.clear();
     
@@ -115,30 +122,58 @@ string gameEngine::getPosScore(int pos){
     }
 }
 
+string gameEngine::getCharPos(){
+
+    string a(1,first);
+    string b(1,second);
+    string c(1,third);
+
+    return a+b+c;
+}
+
+
+invader gameEngine::getUFO(){
+    
+    return *UFO;
+    
+}
+
 void gameEngine::initInvaders(){
     
-   float invaderX = 40.f;
-   float invaderY = 40.f;
+   float iX = 20.f;
+   float iY = 60.f;
+   float invaderX = 20.f;
+   float invaderY = 30.f;
    char tipo = 'C';
    randomShootingTime = 20;
    lastShoot = 0;
    timesOneSide = 0;
-   
+   int points = 100;
    earthDestroyers.clear();
    earthDestroyersShooters.clear();
    
+   UFO = new invader(800.f,35.f,'U');
+   UFO->recruitToWar(rand()%1000,'U');
+   
+   
    this->invadersDirection = 0;   
-    for(int i = 0;i < 5;i++)
+    for(int i = 4;i >= 0;i--)
    {
-       if(i > 1 && i < 3)
+       
+       if(i > 1 && i < 3){
            tipo = 'A';
-       else if(i >= 3)
+           points = 200;
+       }
+       else if(i >= 3){
            tipo = 'B';
+           points = 300;
+       }
         for(int j = 0;j < 11;j++)
         {
-            invaderX = (20.f + j*40.f);
-            invaderY = (30.f + i*40.f);
+            invaderX = (iX + j*40.f);
+            invaderY = (iY + i*40.f);
             invader *alien = new invader(invaderX,invaderY,tipo);
+            alien->recruitToWar(points*level,tipo);
             earthDestroyers.push_back(alien); 
             
             if(i == 4)
@@ -190,6 +225,26 @@ void gameEngine::invadersShoot(){
 
 void gameEngine::invadersCometoEarth(){
     
+    int maxY = 450;
+    
+    if(earthDestroyers[earthDestroyers.size()-1]->getY() >= maxY){
+        screen = 5;
+        pause = true;
+    }
+    
+     if(UFO->getX() >= -50){
+        this->UFO->setPosition(UFO->getX()-15.f,UFO->getY());        
+    }
+    else{        
+        isItTimeforASurprise++;
+        if(randomShowUp == isItTimeforASurprise){            
+            this->UFO->setPosition(800.f,30.f);
+            this->UFO->recruitToWar(1,'U');
+            isItTimeforASurprise = 0;
+            randomShowUp = rand()%150;
+        }
+    }
+    
     for(int jo = 0; jo < earthDestroyers.size(); jo++){
         if ((earthDestroyers[jo]->getX() == 760) && (this->invadersDirection == 0)){
             for(int i =0;i < earthDestroyers.size(); i++ ){
@@ -213,23 +268,35 @@ void gameEngine::invadersCometoEarth(){
     if(this->invadersDirection == 1){  
         for(int i =0;i < earthDestroyers.size(); i++ )
             this->earthDestroyers[i]->setPosition(this->earthDestroyers[i]->getX()-10.f,this->earthDestroyers[i]->getY());   
-        }
-    
+        }    
 }
 
 void gameEngine::runGame(){
     
     //int joe = 0;    
-    //auto start = high_resolution_clock::now();    
+    //auto start = high_resolution_clock::now();
+    
     this->readInput();//reads keyboard and updates player position    
     
-   
-     if(this->pause == true){
-        return;
+    if(this->screen == 6){
+        levelSplashCount++;
     } 
     
-     if (clock() > timeDelay_invader){
+    if( levelUpWait ==  levelSplashCount){
+        levelSplashCount = 0;
+        screen =1;
+        pause = false;
+    }
     
+   
+     if(this->pause == true || this->screen != 1){
+        return;
+    }
+    
+    
+    
+     if (clock() > timeDelay_invader){
+         
         this->invadersCometoEarth();
         timeDelay_invader = clock() + 100000;
         timer = true;
@@ -242,40 +309,48 @@ void gameEngine::runGame(){
     }
         
     if (clock() > timeDelay_bullet){
-             
-    this->invadersShoot();
-    timeDelay_bullet =clock() + 10000;
-    //spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
+        this->invadersShoot();
+        timeDelay_bullet =clock() + 10000;
+        //spaceInvadersMoviment,this class works. But it is mainly an example on how the invaders could behave, again what will they be? a Matrix or a list?Both can be used in a for loop.
         //Add all the smartiness of the game here, shoots, space invaders
     }
-          this->moveBullets();
-     //pthread_create(&this->invadersCometoEarth, NULL, invadersCometoEarth, (void *)joe);          
-          this->collision();
-          
-//         auto start = high_resolution_clock::now();
-// 
-//     auto stop = high_resolution_clock::now();
-//     auto duration = duration_cast<microseconds> (stop - start);
-//     cout << duration.count() << endl;
-
-     //this->invadersShoot();
-     //Collision Detection
-     
+    
+    this->moveBullets();
+    
+    this->collision();
+    
     //Random creation of UFO
-    //this->checkLevelStatus();
+    this->checkLevelStatus();
+    
+    //auto start = high_resolution_clock::now();
 
-
+    //auto stop = high_resolution_clock::now();
+    //auto duration = duration_cast<microseconds> (stop - start);
+    //cout << duration.count() << endl;
+    
 }
 
 void gameEngine::checkLevelStatus(){
          if(this->gamer->getLives() == 0){
-         screen = 5;
-         pause = true;
+            //screen = 5;
+            pause = true;
         }
         if(earthDestroyers.size() == 0){
-         this->initInvaders();
-         level++;         
+            level++;
+            //Show Level Screen Here
+            levelUpWait = 1000;
+            levelSplashCount =0;
+            screen = 6;
+            pause = true;
+            //keep on the game
+            this->initInvaders();          
         }
+}
+
+int gameEngine::getLevel(){
+ 
+    return level;
+    
 }
 
 player gameEngine::getPlayer(){
@@ -291,8 +366,7 @@ std::vector<bullet*> gameEngine::getBullets(){
  }
 
 std::vector<invader*> gameEngine::getInvaders(){
-    return this->earthDestroyers;
-    
+    return this->earthDestroyers;    
 }
 
 bool gameEngine::getTimer(){
@@ -314,6 +388,15 @@ void gameEngine::collision(){
                 continue;
             }
         }
+        
+       for(int i = 0; i < this->earthDestroyersShooters.size();i++){
+           if(!this->earthDestroyersShooters[i]->isAlive()){
+                earthDestroyersShooters.erase(earthDestroyersShooters.begin()+i);
+                //earthDestroyers[i]->setType('F');
+                continue;
+            }
+        }
+     
     
      for(int j = 0; j < this->player_bullets.size();j++) {
         for(int b = 0; b < this->barriers.size();b++){
@@ -322,10 +405,26 @@ void gameEngine::collision(){
                         barriers.erase(barriers.begin()+b);
                         //alsoDeleteBullets
                         player_bullets.erase(player_bullets.begin()+j);
+                        
                  break;                
             }
-    }        
+            
+            
+    }
     
+    for(int i = 0; i < this->bullets.size();i++){
+        if(isBulletInTheArea(*(this->bullets[i]), *(this->player_bullets[j]))){
+            player_bullets.erase(player_bullets.begin()+j);
+            bullets.erase(bullets.begin()+j);
+        }          
+    }
+    
+    
+    if(isBulletInTheArea(*(this->player_bullets[j]),*UFO)){
+        this->UFO->setPosition(-50.f,40.f);
+        this->gamer->setScore(UFO->getScore());
+    }
+        
     for(int i = 0; i < this->earthDestroyersShooters.size();i++){
             if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyersShooters[i]))){
                       for(int p = (earthDestroyers.size() -1); p > 0; --p){
@@ -396,6 +495,21 @@ bool gameEngine::isBulletInTheArea(bullet balas, barrier elBadBoys){
         return false;
 }
 
+bool gameEngine::isBulletInTheArea(bullet balas, bullet elBadBoys){
+    
+    /*if(balas.getX() < elBadBoys.getX() || balas.getY() < elBadBoys.getY())
+        return false;*/
+    
+    float x = balas.getX() - elBadBoys.getX();
+    float y = balas.getY() - elBadBoys.getY();
+    float distance = sqrt(x*x+y*y);
+        
+    if(distance <= 3.f)
+        return true;
+    else
+        return false;
+}
+
 bool gameEngine::isBulletInTheArea(bullet balas, invader elBadBoys){
     
     if(balas.getX()+1 < elBadBoys.getX() || balas.getY() < elBadBoys.getY())
@@ -447,7 +561,7 @@ void gameEngine::moveBullets(){
                     player_bullets[j]->setPosition(player_bullets[j]->getY() - 5);
                     }
     }
-}    
+}
 
 int gameEngine::getScreen(){    
     return this->screen;  //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3,gameOver  = 5   
@@ -464,41 +578,101 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
              this->exit = !exit;
 }    
 
-if(screen == 0 || screen == 2 || screen == 5){//Main Menu & Game over
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
                 this->option--;
                 if(option < 0)
                     option = 4;
+                
+                if(letter == 0){
+                    if(first == 'Z'){
+                        first = 'A';
+                    }
+                    else
+                        this->first++;                    
+                }
+                if(letter == 1){
+                    if(first == 'Z'){
+                        first = 'A';
+                    }
+                    else
+                        this->first++;                    
+                }
+                if(letter == 2){
+                    if(first == 'Z'){
+                        first = 'A';
+                    }
+                    else
+                        this->first++;                    
+                }
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
                 this->option++;
                 if(option > 4)
                     option = 0;
+                
+                if(letter == 0){
+                    if(first == 'A'){
+                        first = 'Z';
+                    }
+                    else
+                        this->first--;                    
+                }
+                if(letter == 1){
+                    if(first == 'A'){
+                        first = 'Z';
+                    }
+                    else
+                        this->first--;                    
+                }
+                if(letter == 2){
+                    if(first == 'A'){
+                        first = 'Z';
+                    }
+                    else
+                        this->first--;                    
+                }
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
         
                 if(screen == 0){
-                //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3
-                        if(option == 0)
-                                this->screen++; //Screen = 1 is the game itself
-                                
+                //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3 , Game over Screen = 5
+                        if(option == 0){
+                            //this->screen++; //Screen = 1 is the game itself
+                            levelUpWait = 750;
+                            levelSplashCount =0;
+                            screen = 6;
+                            pause = true;
+                        }       
                         else    if(option == 1){
                             //HighScore implementation
                             this->fetchScore();
                             option = 0;
                             screen = 2;                            
                         }
-                        else    if(option == 3){
-                            //Creators Faces?
+                        else    if(option == 2){
+                            screen = 3;
                         }
                         else {
                             screen = 4;
                             this->exit = !exit;
                         }                        
                     }
-                    else if(screen == 2){
+                    else if(screen == 1){
+                        cout << "My letter is : " << letter << endl;
+                        if(letter == 3){
+                            string save = this->getCharPos()+ " " + to_string(this->gamer->getScore());
+                            this->writeScore(save);
+                           screen = 5;   
+                           pause = true;
+                        }
+                        else{
+                                letter++;
+                        }
+                    }
+                    else if(screen == 2 || screen == 3){
                         screen = 0;
                     }
                     else if(screen == 5){
@@ -513,19 +687,13 @@ if(screen == 0 || screen == 2 || screen == 5){//Main Menu & Game over
                         }
                 }
     }
-}
 
-if(screen < 1)
+
+if(screen != 1)
     return;
 
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) ){//&& this->gamer->getLives() > 0 ){
-            if (paused_state){
-                this->pause = !pause;
-                paused_state = false;
-            }
-            else{
-                paused_state = true;
-            }
+             this->pause = !pause;
 }
 
 if(pause == true)
@@ -554,7 +722,7 @@ else{
 void gameEngine::initBarriers(int posx,int posy){
     
     int bX = posx;
-    int bY = posy+10;    
+    int bY = posy+20;    
     int updateX,updateY;
     int pieces = 5;
     int growth = 1;

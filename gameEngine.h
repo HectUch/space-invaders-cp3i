@@ -25,7 +25,7 @@ public:
         std::vector<bullet*> getBullets();
         std::vector<bullet*> getPlayerBullets();
         std::vector<barrier*> getBarriers();
-        bool getTimer();
+         bool getTimer();
          int initSound( );
          bool exitGame();
          int getOption();
@@ -33,8 +33,11 @@ public:
          void initInvaders();
          void writeScore(std::string score);
          void fetchScore();
+         invader getUFO();
          string getPosScore(int);
-         
+         int getLevel();
+         string getCharPos();
+                 
 private:
         void checkLevelStatus();
         void initBarriers(int,int);
@@ -46,6 +49,8 @@ private:
         int timesOneSide;
         int lastShoot;
         int level;
+        char first,second,third;
+        int letter;
         int randomShootingTime;
         int invadersDirection;
         int gameSpeed;
@@ -57,11 +62,13 @@ private:
         void invadersCometoEarth();
         void shootSound( );     
         player *gamer;
+        invader* UFO;
         std::vector<invader*> earthDestroyers;//11*5 Invaders
         std::vector<invader*> earthDestroyersShooters;//ShootingInvaders
         std::vector<bullet*> player_bullets;
         std::vector<bullet*> bullets;
         std::vector<barrier*> barriers;
+        bool isBulletInTheArea(bullet,bullet);
         invader ufo; 
         bool pause;
         bool exit;
@@ -74,7 +81,7 @@ private:
         clock_t timeDelay_bullet;
         bool timer;
         bool shoot_state;
-        bool paused_state;
+        int randomShowUp,isItTimeforASurprise,levelUpWait,levelSplashCount;
         int scoreFirst,scoreSecond,scoreThird;
         string pScoreFirst,pScoreSecond,pScoreThird;
 };
