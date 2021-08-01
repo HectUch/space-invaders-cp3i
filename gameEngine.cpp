@@ -1,4 +1,5 @@
 #ifndef GAMEENGINE_H
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -18,6 +19,7 @@
 #include <time.h>
 #include <fstream>
 #include <sstream>
+
 #define GAMEENGINE_H
 
 using namespace std::chrono;
@@ -419,9 +421,6 @@ void gameEngine::collision(){
             if(isBulletInTheArea(*(this->player_bullets[j]),*(this->earthDestroyersShooters[i]))){
                       for(int p = (earthDestroyers.size() -1); p > 0; --p){
                                 if ((earthDestroyers[p]->getX() == earthDestroyersShooters[i]->getX()) && (earthDestroyers[p]->getY() < earthDestroyersShooters[i]->getY()) ){
-                                        //cout << "joe";
-                                      /*earthDestroyersShooters.erase(earthDestroyersShooters.begin() + i);
-                                      earthDestroyersShooters.push_back(earthDestroyers[p]);*/
                                       earthDestroyersShooters[i] = earthDestroyers[p];
                                       
                                        break;
@@ -582,22 +581,23 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                         this->first++;                    
                 }
                 if(letter == 1){
-                    if(first == 'Z'){
-                        first = 'A';
+                    if(second == 'Z'){
+                        second = 'A';
                     }
                     else
-                        this->first++;                    
+                        this->second++;                    
                 }
                 if(letter == 2){
-                    if(first == 'Z'){
-                        first = 'A';
+                    if(third == 'Z'){
+                        third = 'A';
                     }
                     else
-                        this->first++;                    
+                        this->third++;                    
                 }
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                 sf::sleep(sf::milliseconds(100));
                 this->option++;
                 if(option > 4)
                     option = 0;
@@ -610,23 +610,22 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                         this->first--;                    
                 }
                 if(letter == 1){
-                    if(first == 'A'){
-                        first = 'Z';
+                    if(second == 'A'){
+                        second = 'Z';
                     }
                     else
-                        this->first--;                    
+                        this->second--;                    
                 }
                 if(letter == 2){
-                    if(first == 'A'){
-                        first = 'Z';
+                    if(third == 'A'){
+                        third = 'Z';
                     }
                     else
-                        this->first--;                    
+                        this->third--;                    
                 }
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
-        
                 if(screen == 0){
                 //Return  Main Menu = 0, Play Game = 1, Exit = 4, HighScore = 2 , About the Game = 3 , Game over Screen = 5
                         if(option == 0){
@@ -640,33 +639,38 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                             //HighScore implementation
                             this->fetchScore();
                             option = 0;
-                            screen = 2;                            
+                            screen = 2; 
+                            sf::sleep(sf::milliseconds(100));
                         }
                         else    if(option == 2){
                             screen = 3;
+                            sf::sleep(sf::milliseconds(100));
                         }
                         else {
                             screen = 4;
                             this->exit = !exit;
                         }                        
                     }
-                    else if(screen == 1){
+                    else if(screen == 1 && pause == true){
                         cout << "My letter is : " << letter << endl;
                         if(letter == 3){
                             string save = this->getCharPos()+ " " + to_string(this->gamer->getScore());
                             this->writeScore(save);
+                            letter = 0;
                            screen = 5;   
                            pause = true;
+                           sf::sleep(sf::milliseconds(100));
                         }
                         else{
                                 letter++;
                         }
                     }
                     else if(screen == 2 || screen == 3){
+                         
                         screen = 0;
                     }
                     else if(screen == 5){
-                            
+                      sf::sleep(sf::milliseconds(100));      
                         if(option%2 == 0){
                                 this->screen = 1; //Screen = 1 is the game itself
                                 this->restartGame();

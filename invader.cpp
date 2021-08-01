@@ -22,6 +22,54 @@ invader::invader(){
    
 }
 
+
+void invader::setPosition(float x,float y){
+    this->x = x;
+    this->y = y;
+    
+}
+
+bool invader::isAlive(){
+    
+    if(this->lives <= 0)
+        return false;
+    else
+        return true;
+    
+}
+
+void invader::getHit(){
+        this->lives = 0;
+        this->type = 'F';
+}
+
+
+void invader::setScore(int Score){
+    this->score += Score;
+}
+
+int invader::getScore(void){
+    this->getHit();
+    return this->score;
+}
+
+float invader::getX(void){
+    return this->x;
+}
+
+float  invader::getY(void){
+    return this->y;
+}
+
+
+int invader::getLives(void ){
+    return this->lives;
+}
+
+void invader::wasHit(void ){
+        this->lives = lives -1;
+}
+
 void invader::recruitToWar(int score,char type){
     
     this->lives = 1;

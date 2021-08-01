@@ -470,10 +470,6 @@ void ScreenGen::aboutTheGame(sf::RenderWindow &window){
         theBoys.setPosition(550.f,150.f);
         window.draw(theBoys);
         
-        theBoys.setTexture(atexture);
-        theBoys.setScale(sf::Vector2f(0.03f, 0.03f));
-        theBoys.setPosition(550.f,300.f);
-        window.draw(theBoys);
         
         theBoys.setTexture(rtexture);
         theBoys.setScale(sf::Vector2f(0.03f, 0.03f));
@@ -487,12 +483,6 @@ void ScreenGen::aboutTheGame(sf::RenderWindow &window){
         textBoxAux.setPosition(550.f,250.f);
         window.draw(textBoxAux);
         
-        textBoxAux.setFont(font);
-        textBoxAux.setString("Alain Jansen");
-        textBoxAux.setCharacterSize(15);
-        textBoxAux.setFillColor(sf::Color::White);
-        textBoxAux.setPosition(550.f,400.f);
-        window.draw(textBoxAux);
         
         textBoxAux.setFont(font);
         textBoxAux.setString("Remmelt Fopma");
