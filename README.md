@@ -1,6 +1,7 @@
 # Space Invaders 
 # Technical Loading Guide
 
+
 This readme is intended to help you on the process on how to load and run this code on your machine, for better understanding of the project, please refer to our wiki. <br />
 This is a C++ code that build for linux, more specifically Raspberry OS (Former Raspian), so first it is important that you have all the libraries, let's go through them all: <br />
 
@@ -23,4 +24,4 @@ From here you should be ready to play. <br />
 
 if you face problems or had Idea based on this project, or you just wanted to share knowledge don't exitate to contact. 
 Our comminutity grows by sharing Ideas.
-Thanks for stopping by, Have fun!
+Thanks for stopping by, Have fun !
