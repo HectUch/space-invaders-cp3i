@@ -1,6 +1,5 @@
 #ifndef SCREENGEN_H
 #include "ScreenGen.h"
-#include "element.h"
 #include "player.h"
 #include "bullet.h"
 #include "barrier.h"

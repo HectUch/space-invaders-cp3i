@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include "element.h"
 #include "player.h"
 #include "bullet.h"
 #include "barrier.h"

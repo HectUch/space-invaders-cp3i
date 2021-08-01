@@ -3,7 +3,6 @@
 #include <string>
 #include "player.h"
 #include "bullet.h"
-#include "element.h"
 #include "barrier.h"
 #include "invader.h"
 #include <vector>
