@@ -22,6 +22,6 @@ make <br />
 
 From here you should be ready to play. <br />
 
-if you face problems or had Idea based on this project, or you just wanted to share knowledge don't exitate to contact. 
+if you face problems or had Idea based on this project, or you just wanted to share knowledge don't hesitate to contact. 
 Our comminutity grows by sharing Ideas.
 Thanks for stopping by, Have fun!
