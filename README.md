@@ -6,7 +6,7 @@ youtube demo video : https://www.youtube.com/watch?v=VvYxq78FB7Q
 
 
 This readme is intended to help you on the process on how to load and run this code on your machine, for better understanding of the project, please refer to our wiki. <br />
-This is a C++ code that build for linux, more specifically Raspberry OS (Former Raspian), so first it is important that you have all the libraries, let's go through them all: <br />
+This is a C++ code that build for linux, more specifically Debian, so first it is important that you have all the libraries, let's go through them all: <br />
 
 sudo apt-get install g++ <br />
 sudo apt-get install freeglut3 <br />
